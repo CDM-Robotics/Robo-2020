@@ -12,14 +12,11 @@ import java.util.logging.*;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Filesystem;
 import team6072.robot2020.logging.LogWrapper;
 import team6072.robot2020.logging.JLogWrapper;
 import team6072.robot2020.logging.LogWrapper.FileType;
 import team6072.robot2020.subsystems.DriveSys;
-import team6072.robot2020.subsystems.FMSSys;
 import team6072.robot2020.subsystems.NavXSys;
 
 /**
