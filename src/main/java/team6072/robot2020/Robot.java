@@ -7,19 +7,13 @@
 
 package team6072.robot2020;
 
-import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import team6072.robot2020.commands.ArcadeDriveCmd;
 import team6072.robot2020.logging.LogWrapper;
-import team6072.robot2020.logging.SuperLogMaster;
 import team6072.robot2020.logging.LogWrapper.FileType;
-import team6072.robot2020.pid.MyPIDController;
+import team6072.robot2020.subsystems.ColorSensorSys;
 import team6072.robot2020.subsystems.DriveSys;
-import team6072.robot2020.commands.RelativeDriveCmd;
+import team6072.robot2020.subsystems.FMSSys;
 import team6072.robot2020.subsystems.NavXSys;
 
 /**
@@ -33,6 +27,7 @@ public class Robot extends TimedRobot {
 
   private CommandScheduler mScheduler;
   private LogWrapper mLog;
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -42,38 +37,30 @@ public class Robot extends TimedRobot {
     mLog = new LogWrapper(FileType.ROBOT, "Robot", team6072.robot2020.logging.LogWrapper.Permission.ALL);
     mScheduler = CommandScheduler.getInstance();
 
-    ControlBoard.getInstance();
+    mScheduler.cancelAll();
+
     DriveSys.getInstance();
     NavXSys.getInstance();
+    ColorSensorSys.getInstance();
   }
 
-  public void disabledInit(){
+  public void disabledInit() {
   }
 
-  public void autonomousInit(){
-    mScheduler.cancelAll();
-    RelativeDriveCmd relativeDriveCmd = new RelativeDriveCmd(ControlBoard.getInstance().mJoystick0);
-    mScheduler.schedule(relativeDriveCmd);
-    mLog.alarm("Autonomous");
-    NavXSys.getInstance().resetAll();
-  }
-
-  @Override
-  public void autonomousPeriodic() {
-    mScheduler.run();
-  }
-
-  public void teleopInit(){
-    mScheduler.cancelAll();
-    ArcadeDriveCmd arcadeDriveCmd = new ArcadeDriveCmd(ControlBoard.getInstance().mJoystick0);
-    mScheduler.schedule(arcadeDriveCmd);
-    mLog.alarm("TelopInit");
+  public void teleopInit() {
+    ControlBoard.getInstance();
     NavXSys.getInstance().resetAll();
   }
 
   @Override
   public void teleopPeriodic() {
-    mScheduler.run();
+    // mScheduler.run();
+    DriveSys.getInstance().arcadeDrive(0, 0);
+    // mLog.periodicDebug(25, "Blue", ColorSensorSys.getInstance().getBlue(), "Red", ColorSensorSys.getInstance().getRed(),
+    //     "Green", ColorSensorSys.getInstance().getGreen(), "Distance", ColorSensorSys.getInstance().getDistance());
+    mLog.periodicPrint("Color: " + ColorSensorSys.getInstance().matchColor().toString(), 25);
+
+    // mLog.periodicDebug(25, "Red", ColorSensorSys.getInstance().getColor().red, "Green", ColorSensorSys.getInstance().getColor().green, "Blue", ColorSensorSys.getInstance().getColor().blue);
   }
 
 }

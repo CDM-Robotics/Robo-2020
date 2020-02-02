@@ -8,9 +8,12 @@
 package team6072.robot2020;
 
 import edu.wpi.first.wpilibj.Joystick;
-import team6072.robot2020.commands.ArcadeDriveCmd;
-import team6072.robot2020.commands.RelativeDriveCmd;
+import team6072.robot2020.commands.drive.*;
 import team6072.robot2020.constants.ControlBoardConstants;
+import team6072.robot2020.constants.logging.LoggerConstants;
+import team6072.robot2020.logging.LogWrapper;
+import team6072.robot2020.logging.LogWrapper.FileType;
+import team6072.robot2020.logging.LogWrapper.Permission;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -23,6 +26,67 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 public class ControlBoard {
 
     private static ControlBoard mControlBoard;
+    private LogWrapper mLog;
+    private CommandScheduler mScheduler;    
+
+    // logitech gamepad buttons
+    public static int LOGITECH_BUT_A = 1;
+    public static int LOGITECH_BUT_B = 2;
+    public static int LOGITECH_BUT_X = 3;
+    public static int LOGITECH_BUT_Y = 4;
+    public static int LOGITECH_BUT_LEFT = 5;
+    public static int LOGITECH_BUT_RIGHT = 6;
+
+    // extreme buttons
+    // Y-axis - forward and back
+    // X-axis - left and right
+    // Z-axis - twist
+    // hub is POV?
+    public static int EXTREME_BUT_TRIGGER = 1;
+    public static int EXTREME_BUT_THUMB = 2;
+    public static int EXTREME_BUT_LEFT_TOP = 5;
+    public static int EXTREME_BUT_LEFT_BOT = 3;
+    public static int EXTREME_BUT_RIGHT_TOP = 6;
+    public static int EXTREME_BUT_RIGHT_BOT = 4;
+    public static int EXTREME_BUT_7 = 7;
+    public static int EXTREME_BUT_8 = 8;
+    public static int EXTREME_BUT_9 = 9;
+    public static int EXTREME_BUT_10 = 10; // not working?
+    public static int EXTREME_BUT_11 = 11; // not working?
+    public static int EXTREME_BUT_12 = 12;
+    // left panel buttons
+    public static int LEFTPANEL_BUT_1 = 7;
+    public static int LEFTPANEL_BUT_2 = 10;
+    public static int LEFTPANEL_BUT_3 = 12;
+    public static int LEFTPANEL_BUT_4 = 8;
+    public static int LEFTPANEL_BUT_5 = 9;
+    public static int LEFTPANEL_BUT_6 = 11;
+    // right panel buttons
+    public static int RIGHT_PANEL_BUT_1 = 7;
+    public static int RIGHT_PANEL_BUT_2 = 10;
+    public static int RIGHT_PANEL_BUT_3 = 11;
+    public static int RIGHT_PANEL_BUT_4 = 8;
+    public static int RIGHT_PANEL_BUT_5 = 9;
+    public static int RIGHT_PANEL_BUT_6 = 12;
+
+    // private ArrayList<Button> mButtonList;
+
+    // drive stick is used for driving robot
+    private static int DRIVE_USB_PORT = 0;
+    public Joystick mDriveStick;
+
+    // control stick is used for elevator, intake
+    private static int CONTROL_USB_PORT = 1;
+    public Joystick mControlStick;
+
+    // left panel used for cargo ship calculations
+    private static int LPANEL_USB_PORT = 2;
+    public Joystick mLeftPanel;
+
+    // right panel used for rocket calculations
+    private static int RPANEL_USB_PORT = 3;
+    public Joystick mRightPanel;
+
     public Joystick mJoystick0;
     public Joystick mJoystick1;
 
@@ -39,10 +103,17 @@ public class ControlBoard {
      * 
      */
     private ControlBoard() {
-        
+        mLog = new LogWrapper(FileType.CONTROLBOARD, "Control Board", LoggerConstants.CONTROL_BOARD_PERMISSION);
+
         mJoystick0 = new Joystick(ControlBoardConstants.JOYSTICK0);
         mJoystick1 = new Joystick(ControlBoardConstants.JOYSTICK1);
-        // CommandScheduler.getInstance().schedule(new RelativeDriveCmd(mJoystick0));
+
+        mScheduler = CommandScheduler.getInstance();
+
+        mLog.alarm("We are in the COntrol Board");
+        ArcadeDriveCmd arcadeDriveCmd = new ArcadeDriveCmd(mJoystick0);
+        mScheduler.schedule(arcadeDriveCmd);
+
     }
 
     private void MapCmdToBut(Joystick stick, int button, Command pressCmd, Command releaseCmd) {

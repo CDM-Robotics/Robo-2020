@@ -1,4 +1,4 @@
-package team6072.robot2020.commands;
+package team6072.robot2020.commands.drive;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -22,6 +22,8 @@ public class ArcadeDriveCmd implements Command {
     private LogWrapper mLog;
     private DriveSys mDriveSys;
 
+    private boolean mCanRun;
+
     /**
      * Specify the the command requires the DriveSys subsystem
      */
@@ -30,6 +32,7 @@ public class ArcadeDriveCmd implements Command {
         mStick = stick;
         mLog = new LogWrapper(FileType.COMMAND, "ArcadeDrive", LoggerConstants.ARCADE_DRIVE_CMD);
         mDriveSys = DriveSys.getInstance();
+        mCanRun = true;
     }
 
     public Set<Subsystem> getRequirements(){
@@ -58,7 +61,10 @@ public class ArcadeDriveCmd implements Command {
      */
     @Override
     public boolean isFinished() {
-        return false;
+        return !mCanRun;
     }
 
+    public void end(){
+        mCanRun = false;
+    }
 }

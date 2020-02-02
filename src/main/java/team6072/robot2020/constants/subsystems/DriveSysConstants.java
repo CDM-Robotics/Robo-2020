@@ -30,7 +30,7 @@ public class DriveSysConstants {
     public static final int DRIVE_TIME_OUT = 10;
 
     // Swerve Drive // still must be set
-    public static final double RELATIVE_P = (1.0 / 65.0);
+    public static final double RELATIVE_P = (1.0 / 75.0);
     public static final double RELATIVE_D = 0.0;
     public static final double RELATIVE_I = 0.0;
     public static final double RELATIVE_F = 0.0;

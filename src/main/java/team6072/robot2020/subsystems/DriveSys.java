@@ -80,10 +80,25 @@ public class DriveSys implements Subsystem {
      * 
      ***********************************************************/
 
+    // private double priorPosition = 0;
+    // private double curnposition = 0;
+    // private boolean first = false;
     public void arcadeDrive(double mag, double yaw) {
         // yaw is weird
         mRoboDrive.arcadeDrive(mag, -yaw, true);
-        mLog.periodicPrint("Magnitude: " + mag + " yaw: " + yaw, 20);
+        // if(first == false){
+        //     first = true;
+        //     priorPosition = mRight_Master.getSensorCollection().getQuadraturePosition();
+        //     curnposition = mRight_Master.getSensorCollection().getQuadraturePosition();
+        // } else {
+        //     priorPosition = curnposition;
+        //     curnposition = mRight_Master.getSensorCollection().getQuadraturePosition();
+        // }
+        // double distance = (curnposition - priorPosition);
+        // double calcVel = ((distance / 4092) * 6 * Math.PI) / .02;
+        // double vel = mRight_Master.getSensorCollection().getQuadratureVelocity();
+        // double ticksVel = (vel / 4092) * 6 * Math.PI;
+        // mLog.periodicDebug(20, "Calculated Velocity", calcVel, "Ticks Velocity", ticksVel);
     }
 
     /***********************************************************

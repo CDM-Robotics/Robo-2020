@@ -1,4 +1,4 @@
-package team6072.robot2020.commands;
+package team6072.robot2020.commands.drive;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -41,6 +41,8 @@ public class RelativeDriveCmd implements Command {
     private LogWrapper mLog;
     private NavXSource mAccumulatedYawSource;
 
+    private boolean mCanRun; 
+
     /**
      * This is the constructor for Relative drive, takes a josytick as a parameter
      * to pair it to the relatvie drive command
@@ -69,6 +71,7 @@ public class RelativeDriveCmd implements Command {
     public void initialize() {
         mAccumulatedYawSource = new NavXSource(NavXDataTypes.TOTAL_YAW);
         mDriveSys.initRelativeDrive();
+        mCanRun = true;
     }
 
     /**
@@ -86,7 +89,7 @@ public class RelativeDriveCmd implements Command {
         double y = mStick.getY();
         double x = mStick.getX();
         y = -y; // adjusting magnitude as the joystick's forward position is negative.  Which is stupid
-        mLog.periodicDebug(10, "Y", y, "X", x);
+        // mLog.periodicDebug(10, "Y", y, "X", x);
         // calculate the magnitude of speed to drive with the pathagorean theorum
         //      This magnitude will be the speed of the robot
         double magnitude = Math.sqrt((y * y) + (x * x));
@@ -147,7 +150,7 @@ public class RelativeDriveCmd implements Command {
         // i just realized i did this in an extremely stupid way so I am going to come back to this later when I can test new code
         mLastValidJoystickTarget = mLastValidJoystickTarget + numOfRobotRevolutions * 360.0;
         // mLog.periodicDebug(30, "Y", y);
-        // mLog.periodicDebug(10, "Y", mStick.getY(), "X", mStick.getX(), "Magnitude", magnitude, "TargetAngle", mLastValidJoystickTarget);
+        mLog.periodicDebug(10, "Y", mStick.getY(), "X", mStick.getX(), "Magnitude", magnitude, "TargetAngle", mLastValidJoystickTarget);
         // mLog.periodicPrint("magnitude: " + magnitude + ", mPerviousAngle: " + mLastValidJoystickTarget + ", mYaw: "
         //         + mYawSource.getData() + ", mAccumulatedYaw: " + mAccumulatedYawSource.getData(), 25);
 
@@ -155,7 +158,12 @@ public class RelativeDriveCmd implements Command {
     }
 
     public boolean isFinished() {
-        return false;
+        return !mCanRun;
+    }
+
+    public void end(){
+        mLog.alarm("Stopping Relative Drive Command");
+        mCanRun = false;
     }
 
 }
