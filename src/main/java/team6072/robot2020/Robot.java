@@ -7,11 +7,17 @@
 
 package team6072.robot2020;
 
+import java.io.*;
+import java.util.logging.*;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Filesystem;
 import team6072.robot2020.logging.LogWrapper;
+import team6072.robot2020.logging.JLogWrapper;
 import team6072.robot2020.logging.LogWrapper.FileType;
-import team6072.robot2020.subsystems.ColorSensorSys;
 import team6072.robot2020.subsystems.DriveSys;
 import team6072.robot2020.subsystems.FMSSys;
 import team6072.robot2020.subsystems.NavXSys;
@@ -25,42 +31,74 @@ import team6072.robot2020.subsystems.NavXSys;
  */
 public class Robot extends TimedRobot {
 
-  private CommandScheduler mScheduler;
-  private LogWrapper mLog;
+	private CommandScheduler mScheduler;
+	private LogWrapper mLog;
 
-  /**
-   * This function is run when the robot is first started up and should be used
-   * for any initialization code.
-   */
-  @Override
-  public void robotInit() {
-    mLog = new LogWrapper(FileType.ROBOT, "Robot", team6072.robot2020.logging.LogWrapper.Permission.ALL);
-    mScheduler = CommandScheduler.getInstance();
+	private JLogWrapper mJLog;
 
-    mScheduler.cancelAll();
+	/**
+	 * This function is run when the robot is first started up and should be used
+	 * for any initialization code.
+	 */
+	@Override
+	public void robotInit() {
+		mLog = new LogWrapper(FileType.ROBOT, "Robot", team6072.robot2020.logging.LogWrapper.Permission.ALL);
+		// initialize the Java logging system
+		try {
+			File dir = Filesystem.getDeployDirectory();
+			String logFile = "NOTFOUND";
+			if (dir.isDirectory()) {
+				logFile = dir.getAbsolutePath() + "/logging.properties";
+			}
+			System.out.println("**********  logConfig: " + logFile + "  *********************");
+			FileInputStream configFile = new FileInputStream(logFile);
+			LogManager.getLogManager().readConfiguration(configFile);
+		} catch (IOException ex) {
+			System.out.println("WARNING: Could not open logging configuration file");
+			System.out.println("WARNING: Logging not configured (console output only)");
+		}
+		mJLog = new JLogWrapper(Robot.class.getName());
+		mLog.alarm("------  Robot initialization  ------------");
+		mScheduler = CommandScheduler.getInstance();
 
-    DriveSys.getInstance();
-    NavXSys.getInstance();
-    ColorSensorSys.getInstance();
-  }
+		ControlBoard.getInstance();
+		DriveSys.getInstance();
+		NavXSys.getInstance();
+	}
 
-  public void disabledInit() {
-  }
+	public void disabledInit() {
+	}
 
-  public void teleopInit() {
-    ControlBoard.getInstance();
-    NavXSys.getInstance().resetAll();
-  }
+	/**
+	 * Autonomous code -----------------------------------------------------
+	 */
 
-  @Override
-  public void teleopPeriodic() {
-    // mScheduler.run();
-    DriveSys.getInstance().arcadeDrive(0, 0);
-    // mLog.periodicDebug(25, "Blue", ColorSensorSys.getInstance().getBlue(), "Red", ColorSensorSys.getInstance().getRed(),
-    //     "Green", ColorSensorSys.getInstance().getGreen(), "Distance", ColorSensorSys.getInstance().getDistance());
-    mLog.periodicPrint("Color: " + ColorSensorSys.getInstance().matchColor().toString(), 25);
+	public void autonomousInit() {
+		mScheduler.cancelAll();
+		NavXSys.getInstance().resetAll();
+	}
 
-    // mLog.periodicDebug(25, "Red", ColorSensorSys.getInstance().getColor().red, "Green", ColorSensorSys.getInstance().getColor().green, "Blue", ColorSensorSys.getInstance().getColor().blue);
-  }
+	@Override
+	public void autonomousPeriodic() {
+		mScheduler.run();
+	}
+
+	/**
+	 * Teleop code -------------------------------------------------------------
+	 */
+
+	public void teleopInit() {
+		mScheduler.cancelAll();
+		NavXSys.getInstance().resetAll();
+	}
+
+	@Override
+	public void teleopPeriodic() {
+		try {
+			mScheduler.run();
+		} catch (Exception ex) {
+			mJLog.severe(ex, "Robot.teleopPeriodic:  exception: " + ex.getMessage());
+		}
+	}
 
 }
