@@ -23,7 +23,7 @@ public class LogWrapper {
      * The type of file
      */
     public enum FileType {
-        COMMAND, COMMAND_GROUP, PID, SUBSYSTEM, WATCHDOG, ROBOT, CONTROLBOARD;
+        COMMAND, COMMAND_GROUP, PID, SUBSYSTEM, WATCHDOG, ROBOT, CONTROLBOARD, NETWORK_TABLES;
     }
 
     /**

@@ -82,6 +82,9 @@ public class DriveSys implements Subsystem {
      * 
      ***********************************************************/
 
+    // private double priorPosition = 0;
+    // private double curnposition = 0;
+    // private boolean first = false;
     public void arcadeDrive(double mag, double yaw) {
         // yaw is weird
         mRoboDrive.arcadeDrive(mag, -yaw, true);

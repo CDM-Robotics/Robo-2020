@@ -9,6 +9,10 @@ package team6072.robot2020;
 
 import edu.wpi.first.wpilibj.Joystick;
 import team6072.robot2020.constants.ControlBoardConstants;
+import team6072.robot2020.constants.logging.LoggerConstants;
+import team6072.robot2020.logging.LogWrapper;
+import team6072.robot2020.logging.LogWrapper.FileType;
+import team6072.robot2020.logging.LogWrapper.Permission;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -49,7 +53,6 @@ public class ControlBoard {
     public static int EXTREME_BUT_12 = 12;
 
     private static ControlBoard mControlBoard;
-
 
     // drive stick is used for driving robot
     private static int DRIVE_USB_PORT = 0;
