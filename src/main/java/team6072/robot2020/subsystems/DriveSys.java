@@ -1,6 +1,7 @@
 package team6072.robot2020.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.InvertType;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import team6072.robot2020.constants.logging.LoggerConstants;
 import team6072.robot2020.pid.MyPIDController;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -10,21 +11,24 @@ import team6072.robot2020.datasources.NavXSource.NavXDataTypes;
 import team6072.robot2020.constants.subsystems.DriveSysConstants;
 import team6072.robot2020.logging.LogWrapper;
 import team6072.robot2020.logging.LogWrapper.FileType;
+import team6072.robot2020.commands.drivesys.*;
+import team6072.robot2020.ControlBoard;
+
+
 
 public class DriveSys implements Subsystem {
 
-    private static DriveSys mDriveSys;
     private LogWrapper mLog;
 
-    private WPI_TalonSRX mLeft_Master;
-    private WPI_TalonSRX mLeft_Slave0;
-    private WPI_TalonSRX mLeft_Slave1;
-    private WPI_TalonSRX mRight_Master;
-    private WPI_TalonSRX mRight_Slave0;
-    private WPI_TalonSRX mRight_Slave1;
+    private WPI_TalonFX mLeft_Master;
+    private WPI_TalonFX mLeft_Slave0;
+
+    private WPI_TalonFX mRight_Master;
+    private WPI_TalonFX mRight_Slave0;
 
     private DifferentialDrive mRoboDrive;
 
+    private static DriveSys mDriveSys;
     public static DriveSys getInstance() {
         if (mDriveSys == null) {
             mDriveSys = new DriveSys();
@@ -34,31 +38,25 @@ public class DriveSys implements Subsystem {
 
     private DriveSys() {
         mLog = new LogWrapper(FileType.SUBSYSTEM, "DriveSystem", LoggerConstants.DRIVESYS_PERMISSION);
-        mLeft_Master = new WPI_TalonSRX(DriveSysConstants.LEFT_TALON_MASTER);
-        mLeft_Slave0 = new WPI_TalonSRX(DriveSysConstants.LEFT_TALON_SLAVE0);
-        mLeft_Slave1 = new WPI_TalonSRX(DriveSysConstants.LEFT_TALON_SLAVE1);
-        mRight_Master = new WPI_TalonSRX(DriveSysConstants.RIGHT_TALON_MASTER);
-        mRight_Slave0 = new WPI_TalonSRX(DriveSysConstants.RIGHT_TALON_SLAVE0);
-        mRight_Slave1 = new WPI_TalonSRX(DriveSysConstants.RIGHT_TALON_SLAVE1);
+
+        mLeft_Master = new WPI_TalonFX(DriveSysConstants.LEFT_TALON_MASTER);
+        mLeft_Slave0 = new WPI_TalonFX(DriveSysConstants.LEFT_TALON_SLAVE0);
+
+        mRight_Master = new WPI_TalonFX(DriveSysConstants.RIGHT_TALON_MASTER);
+        mRight_Slave0 = new WPI_TalonFX(DriveSysConstants.RIGHT_TALON_SLAVE0);
 
         mLeft_Slave0.follow(mLeft_Master);
-        mLeft_Slave1.follow(mLeft_Master);
         mRight_Slave0.follow(mRight_Master);
-        mRight_Slave1.follow(mRight_Master);
+        
+        mLeft_Master.setInverted(DriveSysConstants.DRIVE_LEFT_INVERT);
+        mLeft_Slave0.setInverted(InvertType.FollowMaster);
+        mRight_Master.setInverted(DriveSysConstants.DRIVE_RIGHT_INVERT);
+        mRight_Slave0.setInverted(InvertType.FollowMaster);
 
         mLeft_Master.setSensorPhase(DriveSysConstants.LEFT_TALON_MASTER_SENSOR_PHASE);
-        mLeft_Slave0.setSensorPhase(DriveSysConstants.LEFT_TALON_SLAVE0_SENSOR_PHASE);
-        mLeft_Slave1.setSensorPhase(DriveSysConstants.LEFT_TALON_SLAVE1_SENSOR_PHASE);
+        //mLeft_Slave0.setSensorPhase(DriveSysConstants.LEFT_TALON_SLAVE0_SENSOR_PHASE);
         mRight_Master.setSensorPhase(DriveSysConstants.RIGHT_TALON_MASTER_SENSOR_PHASE);
-        mRight_Slave0.setSensorPhase(DriveSysConstants.RIGHT_TALON_SLAVE0_SENSOR_PHASE);
-        mRight_Slave1.setSensorPhase(DriveSysConstants.RIGHT_TALON_SLAVE1_SENSOR_PHASE);
-
-        // mLeft_Master.setInverted(DriveSysConstants.DRIVE_LEFT_INVERT);
-        // mLeft_Slave0.setInverted(DriveSysConstants.DRIVE_LEFT_INVERT);
-        mLeft_Slave1.setInverted(DriveSysConstants.DRIVE_LEFT_INVERT);
-        // mRight_Master.setInverted(DriveSysConstants.DRIVE_RIGHT_INVERT);
-        // mRight_Slave0.setInverted(DriveSysConstants.DRIVE_RIGHT_INVERT);
-        // mRight_Slave1.setInverted(DriveSysConstants.DRIVE_RIGHT_INVERT);
+        //mRight_Slave0.setSensorPhase(DriveSysConstants.RIGHT_TALON_SLAVE0_SENSOR_PHASE);
 
         mLeft_Master.configOpenloopRamp(DriveSysConstants.DRIVE_CONFIG_OPEN_LOOP_RAMP,
                 DriveSysConstants.DRIVE_TIME_OUT);
@@ -69,7 +67,11 @@ public class DriveSys implements Subsystem {
         mRight_Master.setNeutralMode(DriveSysConstants.DRIVE_NEUTRAL_MODE);
 
         mRoboDrive = new DifferentialDrive(mLeft_Master, mRight_Master);
+    }
 
+
+    public void initDefaultCommand() {
+        setDefaultCommand(new ArcadeDriveCmd(ControlBoard.getInstance().mDriveStick));
     }
 
     /***********************************************************
@@ -83,8 +85,10 @@ public class DriveSys implements Subsystem {
     public void arcadeDrive(double mag, double yaw) {
         // yaw is weird
         mRoboDrive.arcadeDrive(mag, -yaw, true);
-        mLog.periodicPrint("Magnitude: " + mag + " yaw: " + yaw, 20);
+        mLog.periodicPrint("Mag: " + mag + " yaw: " + yaw, 20);
     }
+
+
 
     /***********************************************************
      * 
@@ -143,7 +147,5 @@ public class DriveSys implements Subsystem {
         }
     }
 
-    public void initDefaultCommand() {
 
-    }
 }

@@ -16,13 +16,14 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Filesystem;
-import team6072.robot2020.commands.ArcadeDriveCmd;
+import team6072.robot2020.commands.drivesys.ArcadeDriveCmd;
 import team6072.robot2020.logging.LogWrapper;
 import team6072.robot2020.logging.JLogWrapper;
 import team6072.robot2020.logging.LogWrapper.FileType;
 import team6072.robot2020.subsystems.DriveSys;
-import team6072.robot2020.commands.RelativeDriveCmd;
+import team6072.robot2020.commands.drivesys.RelativeDriveCmd;
 import team6072.robot2020.subsystems.NavXSys;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -77,7 +78,7 @@ public class Robot extends TimedRobot {
 
 	public void autonomousInit() {
 		mScheduler.cancelAll();
-		RelativeDriveCmd relativeDriveCmd = new RelativeDriveCmd(ControlBoard.getInstance().mJoystick0);
+		RelativeDriveCmd relativeDriveCmd = new RelativeDriveCmd(ControlBoard.getInstance().mDriveStick);
 		mScheduler.schedule(relativeDriveCmd);
 		mLog.alarm("Autonomous");
 		NavXSys.getInstance().resetAll();
@@ -94,7 +95,7 @@ public class Robot extends TimedRobot {
 
 	public void teleopInit() {
 		mScheduler.cancelAll();
-		ArcadeDriveCmd arcadeDriveCmd = new ArcadeDriveCmd(ControlBoard.getInstance().mJoystick0);
+		ArcadeDriveCmd arcadeDriveCmd = new ArcadeDriveCmd(ControlBoard.getInstance().mDriveStick);
 		mScheduler.schedule(arcadeDriveCmd);
 		mLog.alarm("TelopInit");
 		NavXSys.getInstance().resetAll();
