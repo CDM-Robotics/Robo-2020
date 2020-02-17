@@ -5,8 +5,8 @@ import java.util.Set;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
-import team6072.robot2020.logging.LogWrapper;
-import team6072.robot2020.logging.LogWrapper.FileType;
+import team6072.robot2020.utility.logging.LogWrapper;
+import team6072.robot2020.utility.logging.LogWrapper.FileType;
 import team6072.robot2020.subsystems.DriveSys;
 import team6072.robot2020.constants.logging.LoggerConstants;
 

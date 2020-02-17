@@ -1,12 +1,13 @@
-package team6072.robot2020.pid;
+package team6072.robot2020.utility.pid;
 
 import team6072.robot2020.constants.pid.PIDControllerConstants;
-import team6072.robot2020.datasources.DataSourceBase;
+import team6072.robot2020.utility.datasources.DataSourceBase;
 import java.util.ArrayList;
 
 import team6072.robot2020.constants.logging.LoggerConstants;
-import team6072.robot2020.logging.LogWrapper;
-import team6072.robot2020.logging.LogWrapper.FileType;
+import team6072.robot2020.utility.logging.LogWrapper;
+import team6072.robot2020.utility.logging.LogWrapper.Permission;
+import team6072.robot2020.utility.logging.LogWrapper.FileType;
 
 public class MyPIDController extends Thread{
 

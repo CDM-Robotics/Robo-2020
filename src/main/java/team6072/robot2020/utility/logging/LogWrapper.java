@@ -1,4 +1,4 @@
-package team6072.robot2020.logging;
+package team6072.robot2020.utility.logging;
 
 
 

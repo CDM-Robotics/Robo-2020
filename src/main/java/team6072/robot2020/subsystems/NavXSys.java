@@ -3,8 +3,8 @@ package team6072.robot2020.subsystems;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import team6072.robot2020.logging.LogWrapper;
-import team6072.robot2020.logging.LogWrapper.FileType;
+import team6072.robot2020.utility.logging.LogWrapper;
+import team6072.robot2020.utility.logging.LogWrapper.FileType;
 import team6072.robot2020.constants.logging.LoggerConstants;
 
 public class NavXSys implements Subsystem {

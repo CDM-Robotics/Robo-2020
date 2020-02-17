@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package team6072.robot2020;
+package team6072.robot2020.robot;
 
 import edu.wpi.first.wpilibj.RobotBase;
 

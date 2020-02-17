@@ -5,14 +5,14 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package team6072.robot2020;
+package team6072.robot2020.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import team6072.robot2020.constants.ControlBoardConstants;
 import team6072.robot2020.constants.logging.LoggerConstants;
-import team6072.robot2020.logging.LogWrapper;
-import team6072.robot2020.logging.LogWrapper.FileType;
-import team6072.robot2020.logging.LogWrapper.Permission;
+import team6072.robot2020.utility.logging.LogWrapper;
+import team6072.robot2020.utility.logging.LogWrapper.FileType;
+import team6072.robot2020.utility.logging.LogWrapper.Permission;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;

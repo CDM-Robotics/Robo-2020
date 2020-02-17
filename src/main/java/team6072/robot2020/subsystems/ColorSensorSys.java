@@ -5,9 +5,9 @@ import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.ColorSensorV3.RawColor;
 import edu.wpi.first.wpilibj.I2C.Port;
-import team6072.robot2020.logging.LogWrapper;
+import team6072.robot2020.utility.logging.LogWrapper;
 import team6072.robot2020.constants.logging.LoggerConstants;
-import team6072.robot2020.logging.LogWrapper.FileType;
+import team6072.robot2020.utility.logging.LogWrapper.FileType;
 import edu.wpi.first.wpilibj.util.Color;
 
 public class ColorSensorSys {

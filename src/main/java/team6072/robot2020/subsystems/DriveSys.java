@@ -3,16 +3,16 @@ package team6072.robot2020.subsystems;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import team6072.robot2020.constants.logging.LoggerConstants;
-import team6072.robot2020.pid.MyPIDController;
+import team6072.robot2020.utility.pid.MyPIDController;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import team6072.robot2020.datasources.NavXSource;
-import team6072.robot2020.datasources.NavXSource.NavXDataTypes;
+import team6072.robot2020.utility.datasources.NavXSource;
+import team6072.robot2020.utility.datasources.NavXSource.NavXDataTypes;
 import team6072.robot2020.constants.subsystems.DriveSysConstants;
-import team6072.robot2020.logging.LogWrapper;
-import team6072.robot2020.logging.LogWrapper.FileType;
+import team6072.robot2020.utility.logging.LogWrapper;
+import team6072.robot2020.utility.logging.LogWrapper.FileType;
 import team6072.robot2020.commands.drivesys.*;
-import team6072.robot2020.ControlBoard;
+import team6072.robot2020.robot.ControlBoard;
 
 
 

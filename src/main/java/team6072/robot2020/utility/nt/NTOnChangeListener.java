@@ -1,9 +1,9 @@
-package team6072.robot2020.nt;
+package team6072.robot2020.utility.nt;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableValue;
-import team6072.robot2020.logging.LogWrapper;
-import team6072.robot2020.logging.LogWrapper.FileType;
+import team6072.robot2020.utility.logging.LogWrapper;
+import team6072.robot2020.utility.logging.LogWrapper.FileType;
 import team6072.robot2020.constants.logging.LoggerConstants;
 
 public abstract class NTOnChangeListener{

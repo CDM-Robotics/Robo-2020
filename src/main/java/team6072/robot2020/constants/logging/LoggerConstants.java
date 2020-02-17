@@ -1,6 +1,6 @@
 package team6072.robot2020.constants.logging;
 
-import team6072.robot2020.logging.LogWrapper.Permission;
+import team6072.robot2020.utility.logging.LogWrapper.Permission;
 
 public class LoggerConstants {
 

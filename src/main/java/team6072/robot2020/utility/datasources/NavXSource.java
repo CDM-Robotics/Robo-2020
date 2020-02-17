@@ -1,4 +1,4 @@
-package team6072.robot2020.datasources;
+package team6072.robot2020.utility.datasources;
 
 import team6072.robot2020.subsystems.NavXSys;
 

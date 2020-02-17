@@ -1,4 +1,4 @@
-package team6072.robot2020.nt;
+package team6072.robot2020.utility.nt;
 
 import java.util.ArrayList;
 
@@ -7,9 +7,9 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import team6072.robot2020.logging.LogWrapper;
+import team6072.robot2020.utility.logging.LogWrapper;
 import team6072.robot2020.constants.logging.LoggerConstants;
-import team6072.robot2020.logging.LogWrapper.FileType;
+import team6072.robot2020.utility.logging.LogWrapper.FileType;
 
 /**
  * Extends thread, use .start() to start the thread use .end() to end the thread

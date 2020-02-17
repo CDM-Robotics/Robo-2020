@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package team6072.robot2020;
+package team6072.robot2020.robot;
 
 import java.io.*;
 import java.util.logging.*;
@@ -14,9 +14,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj.Filesystem;
 import team6072.robot2020.commands.drivesys.ArcadeDriveCmd;
-import team6072.robot2020.logging.LogWrapper;
-import team6072.robot2020.logging.JLogWrapper;
-import team6072.robot2020.logging.LogWrapper.FileType;
+import team6072.robot2020.utility.logging.LogWrapper;
+import team6072.robot2020.utility.logging.JLogWrapper;
+import team6072.robot2020.utility.logging.LogWrapper.FileType;
 import team6072.robot2020.subsystems.DriveSys;
 import team6072.robot2020.commands.drivesys.RelativeDriveCmd;
 import team6072.robot2020.subsystems.NavXSys;
@@ -42,7 +42,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
-		mLog = new LogWrapper(FileType.ROBOT, "Robot", team6072.robot2020.logging.LogWrapper.Permission.ALL);
+		mLog = new LogWrapper(FileType.ROBOT, "Robot", team6072.robot2020.utility.logging.LogWrapper.Permission.ALL);
 		// initialize the Java logging system
 		try {
 			File dir = Filesystem.getDeployDirectory();

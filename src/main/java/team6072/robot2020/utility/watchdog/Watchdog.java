@@ -1,4 +1,4 @@
-package team6072.robot2020.watchdog;
+package team6072.robot2020.utility.watchdog;
 
 import java.util.TimerTask;
 
