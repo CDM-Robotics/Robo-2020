@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import team6072.robot2020.constants.logging.LoggerConstants;
 import team6072.robot2020.utility.logging.LogWrapper;
 import team6072.robot2020.utility.logging.LogWrapper.Permission;
+import team6072.robot2020.utility.thread.Threaded;
 import team6072.robot2020.utility.logging.LogWrapper.FileType;
 
-public class MyPIDController extends Thread{
+public class MyPIDController extends Threaded{
 
     private LogWrapper mLog;
 
@@ -54,7 +55,7 @@ public class MyPIDController extends Thread{
      */
     public MyPIDController(double p, double i, double d, double f, DataSourceBase dataSource, double maxOutput,
             double minOutput) {
-        mLog = new LogWrapper(FileType.PID, "PID Controller", LoggerConstants.PID_CONTROLLER_PERMISSION);
+        mLog = new LogWrapper(FileType.UTILITY, "PID Controller", LoggerConstants.PID_CONTROLLER_PERMISSION);
         mDataSource = dataSource;
         mP = (p);
         mLog.print("mP: " + mP);

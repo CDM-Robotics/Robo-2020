@@ -15,7 +15,7 @@ public abstract class NTOnChangeListener{
     public NTOnChangeListener(NetworkTableEntry networkTableEntry){
         mNetworkTableEntry = networkTableEntry;
         mPriorValue = mNetworkTableEntry.getValue();
-        mLog = new LogWrapper(FileType.NETWORK_TABLES, "NT Listener", LoggerConstants.NETWORK_TABLES_PERMISSION);
+        mLog = new LogWrapper(FileType.UTILITY, "NT Listener", LoggerConstants.NETWORK_TABLES_PERMISSION);
     }
 
     public void checkState(){

@@ -1,6 +1,7 @@
 package team6072.robot2020.subsystems;
 
 import com.ctre.phoenix.motorcontrol.InvertType;
+import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import team6072.robot2020.constants.logging.LoggerConstants;
 import team6072.robot2020.utility.pid.MyPIDController;
@@ -22,9 +23,12 @@ public class DriveSys implements Subsystem {
 
     private WPI_TalonFX mLeft_Master;
     private WPI_TalonFX mLeft_Slave0;
-
     private WPI_TalonFX mRight_Master;
     private WPI_TalonFX mRight_Slave0;
+
+    private TalonFXSensorCollection mLeTalonFXSensorCollection;
+    private TalonFXSensorCollection mRiTalonFXSensorCollection;
+
 
     private DifferentialDrive mRoboDrive;
 
@@ -41,22 +45,31 @@ public class DriveSys implements Subsystem {
 
         mLeft_Master = new WPI_TalonFX(DriveSysConstants.LEFT_TALON_MASTER);
         mLeft_Slave0 = new WPI_TalonFX(DriveSysConstants.LEFT_TALON_SLAVE0);
-
         mRight_Master = new WPI_TalonFX(DriveSysConstants.RIGHT_TALON_MASTER);
         mRight_Slave0 = new WPI_TalonFX(DriveSysConstants.RIGHT_TALON_SLAVE0);
 
+        configMotors();
+
+        mLeTalonFXSensorCollection = new TalonFXSensorCollection(mLeft_Master);
+        mRiTalonFXSensorCollection = new TalonFXSensorCollection(mRight_Master);
+
+        mRoboDrive = new DifferentialDrive(mLeft_Master, mRight_Master);
+    }
+
+    private void configMotors(){
+        
         mLeft_Slave0.follow(mLeft_Master);
         mRight_Slave0.follow(mRight_Master);
-        
+
         mLeft_Master.setInverted(DriveSysConstants.DRIVE_LEFT_INVERT);
         mLeft_Slave0.setInverted(InvertType.FollowMaster);
         mRight_Master.setInverted(DriveSysConstants.DRIVE_RIGHT_INVERT);
         mRight_Slave0.setInverted(InvertType.FollowMaster);
 
         mLeft_Master.setSensorPhase(DriveSysConstants.LEFT_TALON_MASTER_SENSOR_PHASE);
-        //mLeft_Slave0.setSensorPhase(DriveSysConstants.LEFT_TALON_SLAVE0_SENSOR_PHASE);
+        // mLeft_Slave0.setSensorPhase(DriveSysConstants.LEFT_TALON_SLAVE0_SENSOR_PHASE);
         mRight_Master.setSensorPhase(DriveSysConstants.RIGHT_TALON_MASTER_SENSOR_PHASE);
-        //mRight_Slave0.setSensorPhase(DriveSysConstants.RIGHT_TALON_SLAVE0_SENSOR_PHASE);
+        // mRight_Slave0.setSensorPhase(DriveSysConstants.RIGHT_TALON_SLAVE0_SENSOR_PHASE);
 
         mLeft_Master.configOpenloopRamp(DriveSysConstants.DRIVE_CONFIG_OPEN_LOOP_RAMP,
                 DriveSysConstants.DRIVE_TIME_OUT);
@@ -66,7 +79,6 @@ public class DriveSys implements Subsystem {
         mLeft_Master.setNeutralMode(DriveSysConstants.DRIVE_NEUTRAL_MODE);
         mRight_Master.setNeutralMode(DriveSysConstants.DRIVE_NEUTRAL_MODE);
 
-        mRoboDrive = new DifferentialDrive(mLeft_Master, mRight_Master);
     }
 
 
@@ -150,5 +162,61 @@ public class DriveSys implements Subsystem {
         }
     }
 
+
+
+
+    /**
+     * 
+     * 
+     * 
+     * Get Functions 
+     * 
+     * 
+     * 
+     */
+
+    // POsition //
+    public double getLeftCurnPosTicks(){
+        return mLeTalonFXSensorCollection.getIntegratedSensorPosition();
+    }
+
+    public double getRightCurnPosTicks() {
+        return mRiTalonFXSensorCollection.getIntegratedSensorPosition();
+    }
+
+    public double getLeftCurnPosInches() {
+        double position = mLeTalonFXSensorCollection.getIntegratedSensorPosition();
+        double inches = ((position / 2048d) / 5d) * 6d * Math.PI; 
+        return inches;
+    }
+
+    public double getRightCurnPosInches() {
+        double position = mRiTalonFXSensorCollection.getIntegratedSensorPosition();
+        double inches = ((position / 2048d) / 5d) * 6d * Math.PI;
+        return inches;
+    }
+
+
+
+    // Velocity //
+    public double getLeftCurnVelTicks() {
+        return mLeTalonFXSensorCollection.getIntegratedSensorVelocity() * 10d;
+    }
+
+    public double getRightCurnVelTicks() {
+        return mRiTalonFXSensorCollection.getIntegratedSensorVelocity() * 10d;
+    }
+
+    public double getLeftCurnVelInches() {
+        double position = mLeTalonFXSensorCollection.getIntegratedSensorVelocity();
+        double inches = ((position / 2048d) / 5d) * 6d * 10d * Math.PI;
+        return inches;
+    }
+
+    public double getRightCurnVelInches() {
+        double position = mRiTalonFXSensorCollection.getIntegratedSensorVelocity();
+        double inches = ((position / 2048d) / 5d) * 6d * 10d * Math.PI;
+        return inches;
+    }
 
 }

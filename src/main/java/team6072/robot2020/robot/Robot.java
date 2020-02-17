@@ -8,6 +8,7 @@
 package team6072.robot2020.robot;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.logging.*;
 
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -15,12 +16,17 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj.Filesystem;
 import team6072.robot2020.commands.drivesys.ArcadeDriveCmd;
 import team6072.robot2020.utility.logging.LogWrapper;
+import team6072.robot2020.utility.RobotTracker;
 import team6072.robot2020.utility.logging.JLogWrapper;
 import team6072.robot2020.utility.logging.LogWrapper.FileType;
+import team6072.robot2020.utility.math.Angle2D;
+import team6072.robot2020.utility.math.Position2D;
+import team6072.robot2020.utility.math.Vector2D;
+import team6072.robot2020.utility.thread.RunAndEndable;
+import team6072.robot2020.subsystems.ColorSensorSys;
 import team6072.robot2020.subsystems.DriveSys;
 import team6072.robot2020.commands.drivesys.RelativeDriveCmd;
 import team6072.robot2020.subsystems.NavXSys;
-
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -32,6 +38,7 @@ import team6072.robot2020.subsystems.NavXSys;
 public class Robot extends TimedRobot {
 
 	private CommandScheduler mScheduler;
+	private ArrayList<RunAndEndable> threads;
 	private LogWrapper mLog;
 
 	private JLogWrapper mJLog;
@@ -42,8 +49,27 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
-		mLog = new LogWrapper(FileType.ROBOT, "Robot", team6072.robot2020.utility.logging.LogWrapper.Permission.ALL);
 		// initialize the Java logging system
+		configLogging();
+		mLog.alarm("------  Robot initialization  ------------");
+
+		mScheduler = CommandScheduler.getInstance();
+
+		ControlBoard.getInstance();
+		DriveSys.getInstance();
+		NavXSys.getInstance();
+		NavXSys.getInstance().resetAll();
+		ColorSensorSys.getInstance();
+		RobotTracker.getInstance();
+
+		// initializing all the independent threads
+		threads = new ArrayList<RunAndEndable>();
+		threads.add(RobotTracker.getInstance());
+		// starts all threads
+	}
+
+	private void configLogging() {
+		mLog = new LogWrapper(FileType.ROBOT, "Robot", team6072.robot2020.utility.logging.LogWrapper.Permission.ALL);
 		try {
 			File dir = Filesystem.getDeployDirectory();
 			String logFile = "NOTFOUND";
@@ -58,15 +84,23 @@ public class Robot extends TimedRobot {
 			System.out.println("WARNING: Logging not configured (console output only)");
 		}
 		mJLog = new JLogWrapper(Robot.class.getName());
-		mLog.alarm("------  Robot initialization  ------------");
-		mScheduler = CommandScheduler.getInstance();
-
-		ControlBoard.getInstance();
-		DriveSys.getInstance();
-		NavXSys.getInstance();
 	}
 
-	public void disabledInit() {
+	/**
+	 * starts all the threads in the threads ARray list
+	 */
+	private void startThreads() {
+		for (int i = 0; i < threads.size(); i++) {
+			Thread thread = new Thread(threads.get(i));
+			thread.start();
+		}
+	}
+
+	private void endThreads() {
+		for (int i = 0; i < threads.size(); i++) {
+			mLog.print("Ending Thread " + i);
+			threads.get(i).end();
+		}
 	}
 
 	/**
@@ -74,15 +108,24 @@ public class Robot extends TimedRobot {
 	 */
 
 	public void autonomousInit() {
+		NavXSys.getInstance().resetAll();
 		mScheduler.cancelAll();
+		startThreads();
+
+		// initialize where we are to RobotTracker
+		RobotTracker.getInstance().setCurrentPosition(new Vector2D(0, 0));
+
 		RelativeDriveCmd relativeDriveCmd = new RelativeDriveCmd(ControlBoard.getInstance().mDriveStick);
 		mScheduler.schedule(relativeDriveCmd);
 		mLog.alarm("Autonomous");
-		NavXSys.getInstance().resetAll();
 	}
 
 	@Override
 	public void autonomousPeriodic() {
+		Position2D position2d = RobotTracker.getInstance().getAbsolutePosition();
+		mLog.periodicDebug(10, "X", position2d.getPositionVector2D().getX(), "Y",
+				position2d.getPositionVector2D().getY(), "angle", position2d.getAngle2D().getDegrees());
+
 		mScheduler.run();
 	}
 
@@ -91,11 +134,14 @@ public class Robot extends TimedRobot {
 	 */
 
 	public void teleopInit() {
+		NavXSys.getInstance().resetAll();
 		mScheduler.cancelAll();
+		startThreads();
+
 		ArcadeDriveCmd arcadeDriveCmd = new ArcadeDriveCmd(ControlBoard.getInstance().mDriveStick);
 		mScheduler.schedule(arcadeDriveCmd);
 		mLog.alarm("TelopInit");
-		NavXSys.getInstance().resetAll();
+
 	}
 
 	@Override
@@ -105,6 +151,15 @@ public class Robot extends TimedRobot {
 		} catch (Exception ex) {
 			mJLog.severe(ex, "Robot.teleopPeriodic:  exception: " + ex.getMessage());
 		}
+	}
+
+	/**
+	 * Disabled init
+	 */
+
+	public void disabledInit() {
+		// disables all other independent threads being run
+		endThreads();
 	}
 
 }

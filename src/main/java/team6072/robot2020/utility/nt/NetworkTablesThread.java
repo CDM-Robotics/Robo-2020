@@ -10,16 +10,17 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import team6072.robot2020.utility.logging.LogWrapper;
 import team6072.robot2020.constants.logging.LoggerConstants;
 import team6072.robot2020.utility.logging.LogWrapper.FileType;
+import team6072.robot2020.utility.thread.RunAndEndable;
 
 /**
  * Extends thread, use .start() to start the thread use .end() to end the thread
  */
-public class NetworkTablesThread extends Thread {
+public class NetworkTablesThread implements RunAndEndable {
 
   // standard Variables //
   private static NetworkTablesThread mNetworkTablesController;
   private LogWrapper mLog;
-  public boolean mRunnable = true;
+  public boolean mCanRun = true;
 
   // Network Tables Variables //
   private NetworkTableInstance ntinst;
@@ -36,7 +37,7 @@ public class NetworkTablesThread extends Thread {
   }
 
   private NetworkTablesThread() {
-    mLog = new LogWrapper(FileType.NETWORK_TABLES, "Network Tables Thread", LoggerConstants.NETWORK_TABLES_PERMISSION);
+    mLog = new LogWrapper(FileType.UTILITY, "Network Tables Thread", LoggerConstants.NETWORK_TABLES_PERMISSION);
 
     // initializing Network Tables //
     ntinst = NetworkTableInstance.getDefault();
@@ -70,7 +71,8 @@ public class NetworkTablesThread extends Thread {
 
   public void run() {
     // mLog.print("Starting Network Tables Listener Thread");
-    while (mRunnable) {
+    mCanRun = true;
+    while (mCanRun) {
       // mLog.periodicPrint("Network Tables THread", 20000);
       for (int i = 0; i < mListeners.size(); i++) {
         mListeners.get(i).checkState();
@@ -79,7 +81,7 @@ public class NetworkTablesThread extends Thread {
   }
 
   public void end() {
-    mRunnable = false;
+    mCanRun = false;
   }
 
   /**
