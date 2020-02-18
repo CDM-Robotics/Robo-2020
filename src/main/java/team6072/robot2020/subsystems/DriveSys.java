@@ -15,8 +15,6 @@ import team6072.robot2020.utility.logging.LogWrapper.FileType;
 import team6072.robot2020.commands.drivesys.*;
 import team6072.robot2020.robot.ControlBoard;
 
-
-
 public class DriveSys implements Subsystem {
 
     private LogWrapper mLog;
@@ -29,10 +27,10 @@ public class DriveSys implements Subsystem {
     private TalonFXSensorCollection mLeTalonFXSensorCollection;
     private TalonFXSensorCollection mRiTalonFXSensorCollection;
 
-
     private DifferentialDrive mRoboDrive;
 
     private static DriveSys mDriveSys;
+
     public static DriveSys getInstance() {
         if (mDriveSys == null) {
             mDriveSys = new DriveSys();
@@ -56,8 +54,8 @@ public class DriveSys implements Subsystem {
         mRoboDrive = new DifferentialDrive(mLeft_Master, mRight_Master);
     }
 
-    private void configMotors(){
-        
+    private void configMotors() {
+
         mLeft_Slave0.follow(mLeft_Master);
         mRight_Slave0.follow(mRight_Master);
 
@@ -81,7 +79,6 @@ public class DriveSys implements Subsystem {
 
     }
 
-
     public void initDefaultCommand() {
         setDefaultCommand(new ArcadeDriveCmd(ControlBoard.getInstance().mDriveStick));
     }
@@ -102,8 +99,6 @@ public class DriveSys implements Subsystem {
         mRoboDrive.arcadeDrive(mag, -yaw, true);
         mLog.periodicPrint("Mag: " + mag + " yaw: " + yaw, 20);
     }
-
-
 
     /***********************************************************
      * 
@@ -154,7 +149,7 @@ public class DriveSys implements Subsystem {
     public void executeRelativeDrive(double targetAngle, double magnitude) {
         mRelativePIDController.setSetpoint(targetAngle);
         double yaw = mRelativePIDController.getOutput();
-        mLog.periodicDebug(30,"Yaw", yaw);
+        mLog.periodicDebug(30, "Yaw", yaw);
         if (yaw > RELATIVE_YAW_THRESHOLD) {
             arcadeDrive(0.0, yaw);
         } else {
@@ -162,60 +157,100 @@ public class DriveSys implements Subsystem {
         }
     }
 
-
-
-
     /**
      * 
      * 
      * 
-     * Get Functions 
+     * Get Functions
      * 
      * 
      * 
      */
 
     // POsition //
-    public double getLeftCurnPosTicks(){
+    /**
+     * Gets the current position of the Left motor in Ticks
+     * @return
+     */
+    public double getLeftCurnPosTicks() {
         return mLeTalonFXSensorCollection.getIntegratedSensorPosition();
     }
 
+    /**
+     * Gets the current position of the Right motor in Ticks
+     * 
+     * @return
+     */
     public double getRightCurnPosTicks() {
         return mRiTalonFXSensorCollection.getIntegratedSensorPosition();
     }
 
+    /**
+     * Gets the current position of the Left motor in Inches
+     * 
+     * @return
+     */
     public double getLeftCurnPosInches() {
-        double position = mLeTalonFXSensorCollection.getIntegratedSensorPosition();
-        double inches = ((position / 2048d) / 5d) * 6d * Math.PI; 
-        return inches;
-    }
-
-    public double getRightCurnPosInches() {
-        double position = mRiTalonFXSensorCollection.getIntegratedSensorPosition();
+        double position = getLeftCurnPosTicks();
         double inches = ((position / 2048d) / 5d) * 6d * Math.PI;
         return inches;
     }
 
-
-
-    // Velocity //
-    public double getLeftCurnVelTicks() {
-        return mLeTalonFXSensorCollection.getIntegratedSensorVelocity() * 10d;
-    }
-
-    public double getRightCurnVelTicks() {
-        return mRiTalonFXSensorCollection.getIntegratedSensorVelocity() * 10d;
-    }
-
-    public double getLeftCurnVelInches() {
-        double position = mLeTalonFXSensorCollection.getIntegratedSensorVelocity();
-        double inches = ((position / 2048d) / 5d) * 6d * 10d * Math.PI;
+    /**
+     * Gets the current position of the Right motor in Inches
+     * 
+     * @return
+     */
+    public double getRightCurnPosInches() {
+        double position = getRightCurnPosTicks();
+        double inches = ((position / 2048d) / 5d) * 6d * Math.PI;
         return inches;
     }
 
+    // Velocity //
+    /**
+     * Units that come in are the number of ticks that pass in 100ms. We convert
+     * this to ticks per second by dividing that number by 100ms and then
+     * multipllying it by 1000ms (1 sec). Therefore making the returning units the
+     * number of ticks that pass per second
+     * 
+     * @return Ticks passed per second
+     */
+    public double getLeftCurnVelTicks() {
+        return mLeTalonFXSensorCollection.getIntegratedSensorVelocity() / 100d * 1000d;
+    }
+
+    /**
+     * Units that come in are the number of ticks that pass in 100ms. We convert
+     * this to ticks per second by dividing that number by 100ms and then
+     * multipllying it by 1000ms (1 sec). Therefore making the returning units the
+     * number of ticks that pass per second
+     * 
+     * @return Ticks passed per second
+     */
+    public double getRightCurnVelTicks() {
+        return mRiTalonFXSensorCollection.getIntegratedSensorVelocity() / 100d * 1000d;
+    }
+
+    /**
+     * Units are Inches per second
+     * 
+     * @return
+     */
+    public double getLeftCurnVelInches() {
+        double position = getLeftCurnVelTicks();
+        double inches = ((position / 2048d) / 5d) * 6d * Math.PI;
+        return inches;
+    }
+
+    /**
+     * Units are inches per second
+     * 
+     * @return
+     */
     public double getRightCurnVelInches() {
-        double position = mRiTalonFXSensorCollection.getIntegratedSensorVelocity();
-        double inches = ((position / 2048d) / 5d) * 6d * 10d * Math.PI;
+        double position = getRightCurnVelTicks();
+        double inches = ((position / 2048d) / 5d) * 6d * Math.PI;
         return inches;
     }
 
