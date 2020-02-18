@@ -86,8 +86,11 @@ public class Robot extends TimedRobot {
 		mJLog = new JLogWrapper(Robot.class.getName());
 	}
 
+
+
+	
 	/**
-	 * starts all the threads in the threads ARray list
+	 * starts all the independent threads in the threads Array list
 	 */
 	private void startThreads() {
 		for (int i = 0; i < threads.size(); i++) {
@@ -96,28 +99,20 @@ public class Robot extends TimedRobot {
 		}
 	}
 
-	private void endThreads() {
-		for (int i = 0; i < threads.size(); i++) {
-			mLog.print("Ending Thread " + i);
-			threads.get(i).end();
-		}
-	}
-
 	/**
 	 * Autonomous code -----------------------------------------------------
 	 */
 
 	public void autonomousInit() {
-		NavXSys.getInstance().resetAll();
+		mLog.alarm("Autonomous");
+
+		// Cancel all events
 		mScheduler.cancelAll();
+
+		// start independent Threads
 		startThreads();
 
-		// initialize where we are to RobotTracker
-		RobotTracker.getInstance().setCurrentPosition(new Vector2D(0, 0));
-
-		RelativeDriveCmd relativeDriveCmd = new RelativeDriveCmd(ControlBoard.getInstance().mDriveStick);
-		mScheduler.schedule(relativeDriveCmd);
-		mLog.alarm("Autonomous");
+		// Schedule commands
 	}
 
 	@Override
@@ -134,14 +129,17 @@ public class Robot extends TimedRobot {
 	 */
 
 	public void teleopInit() {
-		NavXSys.getInstance().resetAll();
-		mScheduler.cancelAll();
-		startThreads();
-
-		ArcadeDriveCmd arcadeDriveCmd = new ArcadeDriveCmd(ControlBoard.getInstance().mDriveStick);
-		mScheduler.schedule(arcadeDriveCmd);
 		mLog.alarm("TelopInit");
 
+		// Cancel all events
+		mScheduler.cancelAll();
+
+		// start independent Threads
+		startThreads();
+
+		// Schedule commands
+		ArcadeDriveCmd arcadeDriveCmd = new ArcadeDriveCmd(ControlBoard.getInstance().mDriveStick);
+		mScheduler.schedule(arcadeDriveCmd);
 	}
 
 	@Override
@@ -154,12 +152,20 @@ public class Robot extends TimedRobot {
 	}
 
 	/**
-	 * Disabled init
+	 * Disabled init, occurs whenever the robot is in disable mode.
 	 */
-
 	public void disabledInit() {
 		// disables all other independent threads being run
 		endThreads();
 	}
-
+	
+	/**
+	 * ends all the independent threads in the threads Array list
+	 */
+	private void endThreads() {
+		for (int i = 0; i < threads.size(); i++) {
+			mLog.print("Ending Thread " + i);
+			threads.get(i).end();
+		}
+	}
 }

@@ -1,5 +1,8 @@
 package team6072.robot2020.utility.math;
 
+/**
+ * represents an Angle, can be constructed from radians, degrees, or cos and sin
+ */
 public class Angle2D {
 
     private double radians, degrees, cos, sin;

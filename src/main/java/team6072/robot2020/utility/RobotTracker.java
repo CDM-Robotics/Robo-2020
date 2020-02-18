@@ -10,6 +10,10 @@ import team6072.robot2020.utility.math.Position2D;
 import team6072.robot2020.utility.math.Vector2D;
 import team6072.robot2020.utility.thread.RunAndEndable;
 
+/**
+ * The Thread that trasks the robot's position as long as it is running. Has a
+ * tolerance level of a few inches. It's not God's eye, what do you expect.
+ */
 public class RobotTracker implements RunAndEndable {
 
     private static RobotTracker mRobotTracker;
@@ -43,14 +47,6 @@ public class RobotTracker implements RunAndEndable {
         // store the current position on the navx
         mLastLeftMotorPosition = mDriveSys.getLeftCurnPosInches();
         mLastRightMotorPosition = mDriveSys.getRightCurnPosInches();
-
-        // mLog.debug("mLastLeftMotorPosition", mLastLeftMotorPosition, "mLastRightMotorPosition", mLastRightMotorPosition,
-        //         "mLastAngle", mLastAngle);
-        // store the absolute position of the robot
-        // must be a set method
-
-        // start updating thread
-        // must set an absolute position first
     }
 
     public void run() {
@@ -85,6 +81,14 @@ public class RobotTracker implements RunAndEndable {
         mReady = true;
     }
 
+    /**
+     * Returns position of the robot based on the XY coordinate plane described on
+     * the README.md here
+     * 
+     * team6072.robot2020.utility.math.README.md
+     * 
+     * @return The robot's current absolute position on the XY coordinate plane
+     */
     public Position2D getAbsolutePosition() {
         return new Position2D(mCurrentPosition, Angle2D.getAngle2DFromDegrees(mNavXSys.getYaw()));
     }
