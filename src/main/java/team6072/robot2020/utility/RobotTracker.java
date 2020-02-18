@@ -64,6 +64,7 @@ public class RobotTracker implements RunAndEndable {
                 mLastRightMotorPosition = mDriveSys.getRightCurnPosInches();
                 mLastLeftMotorPosition = mDriveSys.getLeftCurnPosInches();
             }
+            mLog.warning("You still haven't initialized the starting position!");
         }
     }
 
@@ -90,7 +91,13 @@ public class RobotTracker implements RunAndEndable {
      * @return The robot's current absolute position on the XY coordinate plane
      */
     public Position2D getAbsolutePosition() {
-        return new Position2D(mCurrentPosition, Angle2D.getAngle2DFromDegrees(mNavXSys.getYaw()));
+        if (mReady == true) {
+            return new Position2D(mCurrentPosition, Angle2D.getAngle2DFromDegrees(mNavXSys.getYaw()));
+        } else {
+            mLog.error("You haven't initialized the starting position for the Robot Tracker!!! "
+                    + "Use RobotTracker.getinstance().setCurrentPosition(vector2D) to fix.");
+            return null;
+        }
     }
 
 }
