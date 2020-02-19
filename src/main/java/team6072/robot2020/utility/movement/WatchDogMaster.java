@@ -46,14 +46,18 @@ public class WatchDogMaster implements RunAndEndable {
         while (mCanRun) {
             for (int i = 0; i < mWatchDogs.size(); i++) {
                 if (mWatchDogs.get(i).getCurrentPosition() > mWatchDogs.get(i).getTopBoundaryVal()) {
-                    mWatchDogs.get(i).passedTopBoundaryFunc();
+                    while (mWatchDogs.get(i).getCurrentPosition() > mWatchDogs.get(i).getTopBoundaryVal()) {
+                        mWatchDogs.get(i).passedTopBoundaryFunc();
+                    }
                 } else if (mWatchDogs.get(i).getCurrentPosition() < mWatchDogs.get(i).getBtmBoundaryVal()) {
-                    mWatchDogs.get(i).passedBtmBoundaryFunc();
+                    while (mWatchDogs.get(i).getCurrentPosition() < mWatchDogs.get(i).getBtmBoundaryVal()) {
+                        mWatchDogs.get(i).passedBtmBoundaryFunc();
+                    }
                 }
             }
-            try{
+            try {
                 Thread.sleep(20);
-            } catch (InterruptedException err){
+            } catch (InterruptedException err) {
                 mLog.error(err.toString());
             }
         }
