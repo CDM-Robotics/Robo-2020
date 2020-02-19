@@ -63,8 +63,12 @@ public class RobotTracker implements RunAndEndable {
 
                 mLastRightMotorPosition = mDriveSys.getRightCurnPosInches();
                 mLastLeftMotorPosition = mDriveSys.getLeftCurnPosInches();
+                try {
+                    Thread.sleep(20);
+                } catch (InterruptedException err) {
+                    mLog.error(err.toString());
+                }
             }
-            mLog.warning("You still haven't initialized the starting position!");
         }
     }
 
