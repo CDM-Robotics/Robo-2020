@@ -49,6 +49,36 @@ public class RobotTracker implements RunAndEndable {
         mLastRightMotorPosition = mDriveSys.getRightCurnPosInches();
     }
 
+    /**
+     * This function is where the pseudo-calculus magic happens. THis loop runs 50
+     * times a second and so it is perfectly in sync with the Scheduler and also
+     * does not overload the Talons with information requests.
+     * 
+     * 
+     * ********************************** NOTE **********************************
+     * Some of the concepts utilized below for this function have elements of
+     * Calculus in them. If you have not taken Calculus, just wrestle with it for a
+     * while, you will get it eventually.
+     * 
+     * Now for how thiis works. If we the robot is driving forward while curving to
+     * the right, it is impossible to know where the robot is going to end up based
+     * off only the motor encoders. This is because there are too many combinations
+     * of motor outputs that could have resulted in the resulting numbers, and
+     * therefore, we can not know where the robot is. However, if the robot is
+     * driving in a straight line, at some head angle, we can figure out where it
+     * ends, as its angle does not change, and both wheels move the same distance.
+     * 
+     * If you followed that then this part is the wizardry. Because we cannot find
+     * our position when our robot does a curve, but we can find our position when
+     * our robot does a straight line, we simply assume our robot is driving in a
+     * bunch of tiny straight lines. This works because, in essence, a curved line
+     * is a ton of infinitesimally small straight lines put together. So if we
+     * simply assume we are driving in a bunch of tiny straight lines, and change
+     * the angle of each new line to match the robot, our approximation's error will
+     * be basically negligable. And it is work noting as well that running this
+     * function 50 times a second, as it currently does, makes our tolerance error
+     * about 1 inch on either axis.
+     */
     public void run() {
         mLog.print("Thread before loop");
         mCanRun = true;
