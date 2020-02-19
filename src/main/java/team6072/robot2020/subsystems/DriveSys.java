@@ -168,8 +168,10 @@ public class DriveSys implements Subsystem {
      */
 
     // POsition //
+
     /**
      * Gets the current position of the Left motor in Ticks
+     * 
      * @return
      */
     public double getLeftCurnPosTicks() {
@@ -208,6 +210,7 @@ public class DriveSys implements Subsystem {
     }
 
     // Velocity //
+
     /**
      * Units that come in are the number of ticks that pass in 100ms. We convert
      * this to ticks per second by dividing that number by 100ms and then
@@ -217,7 +220,7 @@ public class DriveSys implements Subsystem {
      * @return Ticks passed per second
      */
     public double getLeftCurnVelTicks() {
-        return mLeTalonFXSensorCollection.getIntegratedSensorVelocity() / 100d * 1000d;
+        return (mLeTalonFXSensorCollection.getIntegratedSensorVelocity() / 100d) * 1000d;
     }
 
     /**
@@ -229,7 +232,7 @@ public class DriveSys implements Subsystem {
      * @return Ticks passed per second
      */
     public double getRightCurnVelTicks() {
-        return mRiTalonFXSensorCollection.getIntegratedSensorVelocity() / 100d * 1000d;
+        return (mRiTalonFXSensorCollection.getIntegratedSensorVelocity() / 100d) * 1000d;
     }
 
     /**

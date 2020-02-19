@@ -67,8 +67,7 @@ public class Robot extends TimedRobot {
 
 		// Set starting points
 		NavXSys.getInstance().resetAll(); // reset navx
-		// RobotTracker.getInstance().setCurrentPosition(new Vector2D()); // set
-		// starting point on XY plane
+		RobotTracker.getInstance().setCurrentPosition(new Vector2D()); // set starting point on XY plane
 	}
 
 	private void configLogging() {
