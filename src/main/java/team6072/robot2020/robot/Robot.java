@@ -55,17 +55,20 @@ public class Robot extends TimedRobot {
 
 		mScheduler = CommandScheduler.getInstance();
 
+		NavXSys.getInstance();
 		ControlBoard.getInstance();
 		DriveSys.getInstance();
-		NavXSys.getInstance();
-		NavXSys.getInstance().resetAll();
 		ColorSensorSys.getInstance();
 		RobotTracker.getInstance();
 
 		// initializing all the independent threads
 		threads = new ArrayList<RunAndEndable>();
 		threads.add(RobotTracker.getInstance());
-		// starts all threads
+
+		// Set starting points
+		NavXSys.getInstance().resetAll(); // reset navx
+		// RobotTracker.getInstance().setCurrentPosition(new Vector2D()); // set
+		// starting point on XY plane
 	}
 
 	private void configLogging() {
@@ -117,10 +120,6 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void autonomousPeriodic() {
-		Position2D position2d = RobotTracker.getInstance().getAbsolutePosition();
-		mLog.periodicDebug(10, "X", position2d.getPositionVector2D().getX(), "Y",
-				position2d.getPositionVector2D().getY(), "angle", position2d.getAngle2D().getDegrees());
-
 		mScheduler.run();
 	}
 
