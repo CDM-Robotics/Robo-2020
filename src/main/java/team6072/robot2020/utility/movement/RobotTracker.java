@@ -1,4 +1,4 @@
-package team6072.robot2020.utility;
+package team6072.robot2020.utility.movement;
 
 import team6072.robot2020.constants.logging.LoggerConstants;
 import team6072.robot2020.subsystems.DriveSys;

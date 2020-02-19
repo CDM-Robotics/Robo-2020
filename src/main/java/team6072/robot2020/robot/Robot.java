@@ -16,7 +16,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj.Filesystem;
 import team6072.robot2020.commands.drivesys.ArcadeDriveCmd;
 import team6072.robot2020.utility.logging.LogWrapper;
-import team6072.robot2020.utility.RobotTracker;
+import team6072.robot2020.utility.movement.RobotTracker;
+import team6072.robot2020.utility.movement.WatchDogMaster;
 import team6072.robot2020.utility.logging.JLogWrapper;
 import team6072.robot2020.utility.logging.LogWrapper.FileType;
 import team6072.robot2020.utility.math.Angle2D;
@@ -59,11 +60,11 @@ public class Robot extends TimedRobot {
 		ControlBoard.getInstance();
 		DriveSys.getInstance();
 		ColorSensorSys.getInstance();
-		RobotTracker.getInstance();
 
 		// initializing all the independent threads
 		threads = new ArrayList<RunAndEndable>();
 		threads.add(RobotTracker.getInstance());
+		threads.add(WatchDogMaster.getInstance());
 
 		// Set starting points
 		NavXSys.getInstance().resetAll(); // reset navx

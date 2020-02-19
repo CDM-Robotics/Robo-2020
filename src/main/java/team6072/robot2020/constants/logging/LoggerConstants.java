@@ -15,6 +15,7 @@ public class LoggerConstants {
     public static Permission PID_CONTROLLER_PERMISSION = Permission.ERRORS_ONLY;
     public static Permission NETWORK_TABLES_PERMISSION = Permission.ALL;
     public static Permission ROBOT_TRACKER_PERMISSION = Permission.ALL;
+    public static Permission WATCH_DOG_PERMISSION = Permission.ALL;
 
     // Commands //
     public static Permission RELATIVE_DRIVE_CMD = Permission.ERRORS_ONLY;

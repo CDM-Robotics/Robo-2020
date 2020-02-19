@@ -1,7 +1,7 @@
-package team6072.robot2020.utility.pid;
+package team6072.robot2020.utility.movement.pid;
 
 import team6072.robot2020.constants.pid.PIDControllerConstants;
-import team6072.robot2020.utility.datasources.DataSourceBase;
+import team6072.robot2020.utility.movement.pid.datasources.DataSourceBase;
 import java.util.ArrayList;
 
 import team6072.robot2020.constants.logging.LoggerConstants;
