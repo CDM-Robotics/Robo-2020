@@ -7,7 +7,7 @@
 
 package team6072.robot2020.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
+import team6072.robot2020.utility.LogitechJoystick;
 import team6072.robot2020.constants.ControlBoardConstants;
 import team6072.robot2020.constants.logging.LoggerConstants;
 import team6072.robot2020.utility.logging.LogWrapper;
@@ -56,11 +56,11 @@ public class ControlBoard {
 
     // drive stick is used for driving robot
     private static int DRIVE_USB_PORT = 0;
-    public Joystick mDriveStick;
+    public LogitechJoystick mDriveStick;
 
     // control stick is used for elevator, intake
     private static int CONTROL_USB_PORT = 1;
-    public Joystick mControlStick;
+    public LogitechJoystick mControlStick;
 
     public static ControlBoard getInstance() {
         if (mControlBoard == null) {
@@ -76,15 +76,15 @@ public class ControlBoard {
      * 
      */
     private ControlBoard() {
-        mDriveStick = new Joystick(DRIVE_USB_PORT);
-        mControlStick = new Joystick(CONTROL_USB_PORT);
+        mDriveStick = new LogitechJoystick(DRIVE_USB_PORT);
+        mControlStick = new LogitechJoystick(CONTROL_USB_PORT);
         // CommandScheduler.getInstance().schedule(new RelativeDriveCmd(mJoystick0));
     }
 
 
 
 
-    private void MapCmdToBut(Joystick stick, int button, Command pressCmd, Command releaseCmd) {
+    private void MapCmdToBut(LogitechJoystick stick, int button, Command pressCmd, Command releaseCmd) {
         JoystickButton but = new JoystickButton(stick, button);
         if (pressCmd != null) {
             but.whenPressed(pressCmd);
@@ -116,7 +116,7 @@ public class ControlBoard {
      * 
      * PovButton is the small rotating button on top of the joystick
      */
-    private void MapCmdToPovBut(Joystick stick, PovAngle angle, Command pressCmd, Command releaseCmd) {
+    private void MapCmdToPovBut(LogitechJoystick stick, PovAngle angle, Command pressCmd, Command releaseCmd) {
         POVButton but = new POVButton(stick, angle.getAngle());
         if (pressCmd != null) {
             but.whenPressed(pressCmd);

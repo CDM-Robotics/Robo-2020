@@ -1,5 +1,6 @@
 package team6072.robot2020.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -51,7 +52,8 @@ public class DriveSys implements Subsystem {
         mLeTalonFXSensorCollection = new TalonFXSensorCollection(mLeft_Master);
         mRiTalonFXSensorCollection = new TalonFXSensorCollection(mRight_Master);
 
-        mRoboDrive = new DifferentialDrive(mLeft_Master, mRight_Master);
+        mLeTalonFXSensorCollection.setIntegratedSensorPosition(0, 10);
+        mRiTalonFXSensorCollection.setIntegratedSensorPosition(0, 10);
     }
 
     private void configMotors() {
@@ -65,9 +67,9 @@ public class DriveSys implements Subsystem {
         mRight_Slave0.setInverted(InvertType.FollowMaster);
 
         mLeft_Master.setSensorPhase(DriveSysConstants.LEFT_TALON_MASTER_SENSOR_PHASE);
-        // mLeft_Slave0.setSensorPhase(DriveSysConstants.LEFT_TALON_SLAVE0_SENSOR_PHASE);
+        mLeft_Slave0.setSensorPhase(DriveSysConstants.LEFT_TALON_SLAVE0_SENSOR_PHASE);
         mRight_Master.setSensorPhase(DriveSysConstants.RIGHT_TALON_MASTER_SENSOR_PHASE);
-        // mRight_Slave0.setSensorPhase(DriveSysConstants.RIGHT_TALON_SLAVE0_SENSOR_PHASE);
+        mRight_Slave0.setSensorPhase(DriveSysConstants.RIGHT_TALON_SLAVE0_SENSOR_PHASE);
 
         mLeft_Master.configOpenloopRamp(DriveSysConstants.DRIVE_CONFIG_OPEN_LOOP_RAMP,
                 DriveSysConstants.DRIVE_TIME_OUT);
@@ -77,10 +79,21 @@ public class DriveSys implements Subsystem {
         mLeft_Master.setNeutralMode(DriveSysConstants.DRIVE_NEUTRAL_MODE);
         mRight_Master.setNeutralMode(DriveSysConstants.DRIVE_NEUTRAL_MODE);
 
+        mRoboDrive = new DifferentialDrive(mLeft_Master, mRight_Master);
     }
 
     public void initDefaultCommand() {
         setDefaultCommand(new ArcadeDriveCmd(ControlBoard.getInstance().mDriveStick));
+    }
+
+    /**
+     * 
+     * For Testing the direction.
+     * 
+     */
+    public void testMotor() {
+        mLeft_Master.set(ControlMode.PercentOutput, .7);
+        mRight_Master.set(ControlMode.PercentOutput, .7);
     }
 
     /***********************************************************
@@ -96,7 +109,12 @@ public class DriveSys implements Subsystem {
     // private boolean first = false;
     public void arcadeDrive(double mag, double yaw) {
         // yaw is weird
-        mRoboDrive.arcadeDrive(mag, -yaw, true);
+
+        // double leftMag = mag + yaw * (1 - (mag / .7));
+        // double rightMag = mag - yaw * (1 - (mag / .7));
+        // mLeft_Master.set(ControlMode.PercentOutput, leftMag);
+        // mRight_Master.set(ControlMode.PercentOutput, rightMag);
+        mRoboDrive.arcadeDrive(mag, yaw, true);
         mLog.periodicPrint("Mag: " + mag + " yaw: " + yaw, 20);
     }
 
@@ -170,12 +188,14 @@ public class DriveSys implements Subsystem {
     // POsition //
 
     /**
-     * Gets the current position of the Left motor in Ticks
+     * Gets the current position of the Left motor in Ticks This number comes out as
+     * negative on the robot so I added a negative sign so that it matches the Right
+     * side.
      * 
      * @return
      */
     public double getLeftCurnPosTicks() {
-        return mLeTalonFXSensorCollection.getIntegratedSensorPosition();
+        return -mLeTalonFXSensorCollection.getIntegratedSensorPosition();
     }
 
     /**
