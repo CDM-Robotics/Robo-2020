@@ -3,7 +3,7 @@ package team6072.robot2020.commands.drivesys;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import team6072.robot2020.subsystems.DriveSys;
-
+import team6072.robot2020.utility.LogitechJoystick;
 import team6072.robot2020.utility.logging.LogWrapper;
 import team6072.robot2020.utility.logging.LogWrapper.FileType;
 import team6072.robot2020.constants.commands.RelativeDriveCmdConstants;
@@ -35,7 +35,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
  */
 public class RelativeDriveCmd implements Command {
 
-    private Joystick mStick;
+    private LogitechJoystick mStick;
     private DriveSys mDriveSys;
     private double mLastValidJoystickTarget = 0;
     private LogWrapper mLog;
@@ -48,7 +48,7 @@ public class RelativeDriveCmd implements Command {
      * @param stick This varaible is the joystick that will be paired to the
      *              Relative Drive command
      */
-    public RelativeDriveCmd(Joystick stick) {
+    public RelativeDriveCmd(LogitechJoystick stick) {
         mLog = new LogWrapper(FileType.COMMAND, "RelativeDriveCmd", LoggerConstants.RELATIVE_DRIVE_CMD);
         // requires(DriveSys.getInstance());
         mDriveSys = DriveSys.getInstance();
@@ -83,7 +83,7 @@ public class RelativeDriveCmd implements Command {
      */
     public void execute() {
         // compute angle from joysticks
-        double y = mStick.getY();
+        double y = mStick.getInvertedY();
         double x = mStick.getX();
         y = -y; // adjusting magnitude as the joystick's forward position is negative.  Which is stupid
         mLog.periodicDebug(10, "Y", y, "X", x);
