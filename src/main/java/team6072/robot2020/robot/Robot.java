@@ -23,7 +23,7 @@ import team6072.robot2020.utility.logging.LogWrapper.FileType;
 import team6072.robot2020.utility.math.Angle2D;
 import team6072.robot2020.utility.math.Position2D;
 import team6072.robot2020.utility.math.Vector2D;
-import team6072.robot2020.utility.thread.RunAndEndable;
+import team6072.robot2020.utility.RunAndEndable;
 import team6072.robot2020.subsystems.ColorSensorSys;
 import team6072.robot2020.subsystems.DriveSys;
 import team6072.robot2020.commands.drivesys.RelativeDriveCmd;
@@ -145,6 +145,9 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		try {
 			mScheduler.run();
+			// mLog.periodicDebug(10, "Left", DriveSys.getInstance().getLeftCurnPosInches(), "Right", DriveSys.getInstance().getRightCurnPosInches());
+			Position2D position = RobotTracker.getInstance().getAbsolutePosition();
+			mLog.periodicDebug(10, "X", position.getPositionVector2D().getX(), "Y", position.getPositionVector2D().getY(), "angle", position.getAngle2D().getDegrees());
 		} catch (Exception ex) {
 			mJLog.severe(ex, "Robot.teleopPeriodic:  exception: " + ex.getMessage());
 		}

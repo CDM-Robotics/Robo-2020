@@ -7,6 +7,7 @@ import com.revrobotics.ColorSensorV3.RawColor;
 import edu.wpi.first.wpilibj.I2C.Port;
 import team6072.robot2020.utility.logging.LogWrapper;
 import team6072.robot2020.constants.logging.LoggerConstants;
+import team6072.robot2020.utility.FMSUtility;
 import team6072.robot2020.utility.logging.LogWrapper.FileType;
 import edu.wpi.first.wpilibj.util.Color;
 
@@ -51,17 +52,17 @@ public class ColorSensorSys {
         return mSensor.getProximity();
     }
 
-    public FMSSys.Color matchColor() {
+    public FMSUtility.Color matchColor() {
         Color color = mSensor.getColor();
         ColorMatchResult result = mColorMatch.matchClosestColor(color);
         if (result.color == mBlue) {
-            return FMSSys.Color.Blue;
+            return FMSUtility.Color.Blue;
         } else if (result.color == mGreen) {
-            return FMSSys.Color.Green;
+            return FMSUtility.Color.Green;
         } else if (result.color == mYellow) {
-            return FMSSys.Color.Yellow;
+            return FMSUtility.Color.Yellow;
         } else if (result.color == mRed) {
-            return FMSSys.Color.Red;
+            return FMSUtility.Color.Red;
         } else {
             return null;
         }

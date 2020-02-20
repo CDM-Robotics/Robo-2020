@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import team6072.robot2020.constants.logging.LoggerConstants;
 import team6072.robot2020.utility.logging.LogWrapper;
 import team6072.robot2020.utility.logging.LogWrapper.Permission;
-import team6072.robot2020.utility.thread.Threaded;
+import team6072.robot2020.utility.Threaded;
 import team6072.robot2020.utility.logging.LogWrapper.FileType;
 
 public class MyPIDController extends Threaded{

@@ -1,10 +1,10 @@
-package team6072.robot2020.subsystems;
+package team6072.robot2020.utility;
 
 import edu.wpi.first.wpilibj.DriverStation;
 
-public class FMSSys {
+public class FMSUtility {
 
-    public static FMSSys.Color getColor() {
+    public static FMSUtility.Color getColor() {
         String gameData;
 
         gameData = DriverStation.getInstance().getGameSpecificMessage();

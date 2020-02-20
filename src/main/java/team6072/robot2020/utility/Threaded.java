@@ -1,4 +1,4 @@
-package team6072.robot2020.utility.thread;
+package team6072.robot2020.utility;
 
 
 public abstract class Threaded extends Thread{

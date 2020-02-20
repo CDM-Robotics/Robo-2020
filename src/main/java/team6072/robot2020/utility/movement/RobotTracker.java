@@ -8,7 +8,7 @@ import team6072.robot2020.utility.logging.LogWrapper.FileType;
 import team6072.robot2020.utility.math.Angle2D;
 import team6072.robot2020.utility.math.Position2D;
 import team6072.robot2020.utility.math.Vector2D;
-import team6072.robot2020.utility.thread.RunAndEndable;
+import team6072.robot2020.utility.RunAndEndable;
 
 /**
  * The Thread that trasks the robot's position as long as it is running. Has a
