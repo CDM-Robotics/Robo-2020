@@ -28,6 +28,7 @@ import team6072.robot2020.subsystems.ColorSensorSys;
 import team6072.robot2020.subsystems.DriveSys;
 import team6072.robot2020.commands.drivesys.RelativeDriveCmd;
 import team6072.robot2020.subsystems.NavXSys;
+import team6072.robot2020.commands.PurePursuitCmd;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -113,6 +114,10 @@ public class Robot extends TimedRobot {
 		startThreads();
 
 		// Schedule commands
+		PurePursuitCmd purePursuitCmd = new PurePursuitCmd();
+		mScheduler.schedule(purePursuitCmd);
+		mLog.alarm("Autonomous");
+		
 	}
 
 	@Override
