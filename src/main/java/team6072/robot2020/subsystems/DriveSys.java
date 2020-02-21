@@ -16,6 +16,10 @@ import team6072.robot2020.utility.logging.LogWrapper.FileType;
 import team6072.robot2020.commands.drivesys.*;
 import team6072.robot2020.robot.ControlBoard;
 
+import team6072.robot2020.utility.movement.pathfinder.Pathfinder;
+import team6072.robot2020.utility.movement.pathfinder.Pathfinder.Waypoint;
+import team6072.robot2020.utility.movement.pathfinder.Pathfinder.Path;
+
 public class DriveSys implements Subsystem {
 
     private LogWrapper mLog;
@@ -173,6 +177,59 @@ public class DriveSys implements Subsystem {
         } else {
             arcadeDrive(magnitude, yaw);
         }
+    }
+
+
+    /*------------------------------------------------------
+    *
+    *
+    *Pure Pursuit Things 
+    *
+    *
+    -------------------------------------------------------*/
+    Path m_robotPath;
+
+    public void initPurePursuit() {
+
+    }
+
+    private double m_leftVelocityCalc;
+    private double m_rightVelocityCalc;
+
+    public void executePurePursuit(int i) {
+
+        if (i == 1) {
+
+            Waypoint[] waypoints = new Waypoint[3];
+
+            waypoints[0] = new Waypoint(0, 0, 90);
+            waypoints[1] = new Waypoint(0, 5, 90);
+            waypoints[2] = new Waypoint(0, 10, 90);
+
+            Path AutoPath = Pathfinder.computePath(waypoints, 500, 0.02, 1, 1, 0.3, 2.6);
+
+            m_robotPath = AutoPath;
+
+        }
+
+        if (i < 501) {
+
+            m_leftVelocityCalc = m_robotPath.m_rightPath[i].velocity / 2;
+            m_rightVelocityCalc = m_robotPath.m_leftPath[i].velocity / 2;
+
+            mRight_Master.set(m_rightVelocityCalc);
+
+            System.out.println(m_rightVelocityCalc);
+
+            mLeft_Master.set(-1 * m_leftVelocityCalc);
+
+            System.out.println(m_leftVelocityCalc);
+
+        } else if (i > 501) {
+            mLeft_Master.set(ControlMode.PercentOutput, 0);
+            mRight_Master.set(ControlMode.PercentOutput, 0);
+        }
+
     }
 
     /**

@@ -28,6 +28,7 @@ import team6072.robot2020.subsystems.ColorSensorSys;
 import team6072.robot2020.subsystems.DriveSys;
 import team6072.robot2020.commands.drivesys.RelativeDriveCmd;
 import team6072.robot2020.subsystems.NavXSys;
+import team6072.robot2020.commands.PurePursuitCmd;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -116,6 +117,10 @@ public class Robot extends TimedRobot {
 		startThreads();
 
 		// Schedule commands
+		PurePursuitCmd purePursuitCmd = new PurePursuitCmd();
+		mScheduler.schedule(purePursuitCmd);
+		mLog.alarm("Autonomous");
+		
 	}
 
 	@Override
@@ -147,7 +152,7 @@ public class Robot extends TimedRobot {
 			mScheduler.run();
 			// mLog.periodicDebug(10, "Left", DriveSys.getInstance().getLeftCurnPosInches(), "Right", DriveSys.getInstance().getRightCurnPosInches());
 			Position2D position = RobotTracker.getInstance().getAbsolutePosition();
-			mLog.periodicDebug(10, "X", position.getPositionVector2D().getX(), "Y", position.getPositionVector2D().getY(), "angle", position.getAngle2D().getDegrees());
+			// mLog.periodicDebug(10, "X", position.getPositionVector2D().getX(), "Y", position.getPositionVector2D().getY(), "angle", position.getAngle2D().getDegrees());
 		} catch (Exception ex) {
 			mJLog.severe(ex, "Robot.teleopPeriodic:  exception: " + ex.getMessage());
 		}
