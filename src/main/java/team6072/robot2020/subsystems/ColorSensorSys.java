@@ -11,7 +11,20 @@ import team6072.robot2020.utility.FMSUtility;
 import team6072.robot2020.utility.logging.LogWrapper.FileType;
 import edu.wpi.first.wpilibj.util.Color;
 
+
+
+/**
+ * Color sensor is responsilbe for
+ *  1. detecting the color of the wheel 
+ *  2. driving the wheel to the correct position
+ * 
+ * Elements are:
+ *  1. color sensor
+ *  2. piston to move the sensor and driving wheel into position
+ *  3. motor with encoder to drive the wheel
+ */
 public class ColorSensorSys {
+
 
     private static ColorSensorSys mColorSensorSys;
 
