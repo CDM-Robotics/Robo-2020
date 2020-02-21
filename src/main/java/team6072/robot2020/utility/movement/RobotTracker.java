@@ -13,6 +13,40 @@ import team6072.robot2020.utility.RunAndEndable;
 /**
  * The Thread that trasks the robot's position as long as it is running. Has a
  * tolerance level of a few inches. It's not God's eye, what do you expect.
+ * 
+ * The accuracy of the Robot Tracker is not absolute and is prone to a few
+ * notable sources of error that need to be addressed before making code TOO
+ * dependent on it.
+ * 
+ * the list of these errors are in order of decending importance
+ * 
+ * Source of Error #1) The Robot Tracker looses the most accuracy when the robot
+ * drives in a very small radius circles. This is because, when driving this
+ * only one side of the robot's wheels are turning significantly, causing the
+ * readings on the encoder to not pick up the robot's skidding movement on the
+ * other side of the robot. This problem is compounded the faster the robot
+ * takes these turns. This error often results in the most significant errors,
+ * usually in about 10 to 12 inches on either axis. However, if you can avoid
+ * it, make sure the robot does not make too many tiny circle curves during
+ * autonomous. Note: Turning in place is fine, small circles are a no go.
+ * 
+ * Source of Error #2) the Falcon motors are far faster and more powerful than
+ * the normal MiniCims that we use and therefore, they drive more wrecklessly.
+ * Driving faster will decrease the accuracy because it makes the robot more
+ * prone to skidding during the match and, therefore, put the robot off by a few
+ * inches every time the robot drives. Therefore to address this problem, make
+ * sure that the robot does not drive too fast during autonomous and that the
+ * motors do not skid too much.
+ * 
+ * Source of Error #3) The robot is too light. At the time of me writing this,
+ * the robot has no subsystems attached on top of it and therefore it is far
+ * lighter than our robot that is 120 pounds. This can cause the robot to do
+ * what I call wheel spin outs, where the wheels spin but do not have enough
+ * friction with the floor to start moving. This causes the robot to record
+ * movement in the motors that does not translate to actual robot movement
+ * causing error in the RobotTracker's projection.
+ * 
+ * 
  */
 public class RobotTracker implements RunAndEndable {
 
