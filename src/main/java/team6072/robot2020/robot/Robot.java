@@ -114,8 +114,8 @@ public class Robot extends TimedRobot {
 		startThreads();
 
 		// Schedule commands
-		PurePursuitCmd purePursuitCmd = new PurePursuitCmd();
-		mScheduler.schedule(purePursuitCmd);
+		// PurePursuitCmd purePursuitCmd = new PurePursuitCmd();
+		// mScheduler.schedule(purePursuitCmd);
 		mLog.alarm("Autonomous");
 		
 	}

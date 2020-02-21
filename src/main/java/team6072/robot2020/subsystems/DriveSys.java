@@ -139,7 +139,7 @@ public class DriveSys implements Subsystem {
 
         double maxInput = Math.copySign(Math.max(Math.abs(mag), Math.abs(yaw)), mag);
         if(Math.abs(yaw) > Math.abs(mag)){
-            maxInput = maxInput * 0.8;
+            maxInput = maxInput * 0.9;
         }
         // big mag small yaw
 
