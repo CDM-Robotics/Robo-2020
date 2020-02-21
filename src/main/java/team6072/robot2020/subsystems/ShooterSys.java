@@ -2,6 +2,8 @@
 
 package team6072.robot2020.subsystems;
 
+import edu.wpi.first.wpilibj2.command.Subsystem;
+
 /**
  * Shooter sys needs to 
  *  1. accept balls from the IntakeSys
@@ -16,7 +18,7 @@ package team6072.robot2020.subsystems;
  *  3. Hood adjust motor - with encoder
  *  4. Ball into motor - no encoder, on/off
  */
-public class ShooterSys {
+public class ShooterSys implements Subsystem{
 
 
 }

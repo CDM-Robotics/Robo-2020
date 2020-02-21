@@ -116,6 +116,17 @@ public class DriveSys implements Subsystem {
      * process more efficient and customizable, while still not messing with
      * PurePursuit and Watchdog code.
      * 
+     * Let me explain some things. This function is complicated because it's purpose
+     * is to make sure the wheels do not go faster than the user would want.
+     * 
+     * The way we do this is by first deciding what the maximum speed is, labeled
+     * maxInput. Then, when we decide how fast we want the fastest motor to go, we
+     * then have to decide which motor will get to have that maxInput value. After
+     * using some If statements, we find out which motor must go faster to be able
+     * to turn the way we want. We set that motor to the max speed and then do
+     * addition to find the second motor's speed. The math done to find the second
+     * motor's speed will vary depending on the mag and yaw values.
+     * 
      * If everything is right then the function should be completely normal
      * 
      * @param mag
@@ -124,25 +135,31 @@ public class DriveSys implements Subsystem {
 
     public void arcadeDrive(double mag, double yaw) {
         // clamp numbers
+        // makes the numbers within the range of 1 and -1
         mag = MathUtil.clamp(mag, -1.0, 1.0);
         yaw = MathUtil.clamp(yaw, -1.0, 1.0);
 
         // Square the inputs (while preserving the sign) to increase fine control
         // while permitting full power.
-        if (true) {
-            mag = Math.copySign(mag * mag, mag);
-            yaw = Math.copySign(yaw * yaw, yaw);
-        }
+        // This makes the input graph to power look like a parabola and it makes the
+        // user able to make finer turns and controls closer to the joystick, while
+        // still allowing the user to reach the maximum speed
+        mag = Math.copySign(mag * mag, mag);
+        yaw = Math.copySign(yaw * yaw, yaw);
 
         double leftOutput;
         double rightOutput;
 
-        double maxInput = Math.copySign(Math.max(Math.abs(mag), Math.abs(yaw)), mag);
-        if(Math.abs(yaw) > Math.abs(mag)){
+        // the speed the faster motor will be going
+        double maxInput = Math.copySign(Math.max(Math.abs(mag), Math.abs(yaw)), mag); 
+
+        // If the user wants to make the robot turn in place, by making the yaw greater
+        // than the mag, then reduce the motor's fastest speed by 10%
+        if (Math.abs(yaw) > Math.abs(mag)) {
             maxInput = maxInput * 0.9;
         }
-        // big mag small yaw
 
+        // Deciding which motor will be the faster one and which will be the slower one
         if (mag >= 0.0) {
             // First quadrant, else second quadrant
             if (yaw >= 0.0) {
@@ -163,14 +180,10 @@ public class DriveSys implements Subsystem {
             }
         }
 
+        // setting values
         mLeft_Master.set(MathUtil.clamp(leftOutput, -1.0, 1.0));
         mRight_Master.set(MathUtil.clamp(rightOutput, -1.0, 1.0));
 
-        // double leftMag = mag + yaw * (1 - (mag / .7));
-        // double rightMag = mag - yaw * (1 - (mag / .7));
-        // mLeft_Master.set(ControlMode.PercentOutput, leftMag);
-        // mRight_Master.set(ControlMode.PercentOutput, rightMag);
-        // mRoboDrive.arcadeDrive(mag, yaw, true);
         mLog.periodicPrint("Mag: " + mag + " yaw: " + yaw, 20);
     }
 
@@ -230,7 +243,6 @@ public class DriveSys implements Subsystem {
             arcadeDrive(magnitude, yaw);
         }
     }
-
 
     /*------------------------------------------------------
     *
