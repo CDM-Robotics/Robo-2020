@@ -24,10 +24,13 @@ public class DriveSysConstants {
 
     // Motor settings //
     public static final boolean DRIVE_LEFT_INVERT = true;                // 2020-02-16
-    public static final boolean DRIVE_RIGHT_INVERT = true; // false if just setting the motor, true if arcade             // 2020-02-16
+    public static final boolean DRIVE_RIGHT_INVERT = false; // false if just setting the motor, true if arcade             // 2020-02-16
     public static final NeutralMode DRIVE_NEUTRAL_MODE = NeutralMode.Coast;
     public static final double DRIVE_CONFIG_OPEN_LOOP_RAMP = .1;
     public static final int DRIVE_TIME_OUT = 10;
+
+    // Drive Settings //
+    public static final double MAX_DRIVE_SPEED = .60;
 
     // Swerve Drive // still must be set
     public static final double RELATIVE_P = (1.0 / 75.0);

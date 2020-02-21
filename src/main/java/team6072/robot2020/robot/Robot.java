@@ -89,9 +89,6 @@ public class Robot extends TimedRobot {
 		mJLog = new JLogWrapper(Robot.class.getName());
 	}
 
-
-
-	
 	/**
 	 * starts all the independent threads in the threads Array list
 	 */
@@ -145,9 +142,11 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		try {
 			mScheduler.run();
-			// mLog.periodicDebug(10, "Left", DriveSys.getInstance().getLeftCurnPosInches(), "Right", DriveSys.getInstance().getRightCurnPosInches());
+			// mLog.periodicDebug(10, "Left", DriveSys.getInstance().getLeftCurnPosInches(),
+			// "Right", DriveSys.getInstance().getRightCurnPosInches());
 			Position2D position = RobotTracker.getInstance().getAbsolutePosition();
-			mLog.periodicDebug(10, "X", position.getPositionVector2D().getX(), "Y", position.getPositionVector2D().getY(), "angle", position.getAngle2D().getDegrees());
+			mLog.periodicDebug(10, "X", position.getPositionVector2D().getX(), "Y",
+					position.getPositionVector2D().getY(), "angle", position.getAngle2D().getDegrees());
 		} catch (Exception ex) {
 			mJLog.severe(ex, "Robot.teleopPeriodic:  exception: " + ex.getMessage());
 		}
@@ -160,7 +159,7 @@ public class Robot extends TimedRobot {
 		// disables all other independent threads being run
 		endThreads();
 	}
-	
+
 	/**
 	 * ends all the independent threads in the threads Array list
 	 */

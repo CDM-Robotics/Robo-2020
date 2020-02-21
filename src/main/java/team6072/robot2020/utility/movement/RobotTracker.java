@@ -47,6 +47,7 @@ public class RobotTracker implements RunAndEndable {
         // store the current position on the navx
         mLastLeftMotorPosition = mDriveSys.getLeftCurnPosInches();
         mLastRightMotorPosition = mDriveSys.getRightCurnPosInches();
+        mLog.debug("Left Motor Start POs", mLastLeftMotorPosition, "Right Motor Start Pos", mLastRightMotorPosition);
     }
 
     /**

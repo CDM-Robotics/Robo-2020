@@ -8,6 +8,7 @@ import team6072.robot2020.constants.logging.LoggerConstants;
 import team6072.robot2020.utility.movement.pid.MyPIDController;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpiutil.math.MathUtil;
 import team6072.robot2020.utility.movement.pid.datasources.NavXSource.NavXDataTypes;
 import team6072.robot2020.utility.movement.pid.datasources.NavXSource;
 import team6072.robot2020.constants.subsystems.DriveSysConstants;
@@ -16,6 +17,14 @@ import team6072.robot2020.utility.logging.LogWrapper.FileType;
 import team6072.robot2020.commands.drivesys.*;
 import team6072.robot2020.robot.ControlBoard;
 
+/**
+ * This is the drive system of the robot, pretty self explanitory, but I would
+ * like to point out one thing real fast Reseting the motors takes time, and
+ * therefore, if you reset the motors, you must make sure that nothing takes the
+ * position of the robot in the same chunk of code. THis is to prevent the code
+ * from taking a reading BEFORE the number gets erased and reset to zero,
+ * causing an error in your code, and more specifically ROBOT TRACKER.
+ */
 public class DriveSys implements Subsystem {
 
     private LogWrapper mLog;
@@ -27,8 +36,6 @@ public class DriveSys implements Subsystem {
 
     private TalonFXSensorCollection mLeTalonFXSensorCollection;
     private TalonFXSensorCollection mRiTalonFXSensorCollection;
-
-    private DifferentialDrive mRoboDrive;
 
     private static DriveSys mDriveSys;
 
@@ -52,8 +59,8 @@ public class DriveSys implements Subsystem {
         mLeTalonFXSensorCollection = new TalonFXSensorCollection(mLeft_Master);
         mRiTalonFXSensorCollection = new TalonFXSensorCollection(mRight_Master);
 
-        mLeTalonFXSensorCollection.setIntegratedSensorPosition(0, 10);
-        mRiTalonFXSensorCollection.setIntegratedSensorPosition(0, 10);
+        // mLeTalonFXSensorCollection.setIntegratedSensorPosition(0, 10);
+        // mRiTalonFXSensorCollection.setIntegratedSensorPosition(0, 10);
     }
 
     private void configMotors() {
@@ -78,8 +85,6 @@ public class DriveSys implements Subsystem {
 
         mLeft_Master.setNeutralMode(DriveSysConstants.DRIVE_NEUTRAL_MODE);
         mRight_Master.setNeutralMode(DriveSysConstants.DRIVE_NEUTRAL_MODE);
-
-        mRoboDrive = new DifferentialDrive(mLeft_Master, mRight_Master);
     }
 
     public void initDefaultCommand() {
@@ -103,18 +108,66 @@ public class DriveSys implements Subsystem {
      * 
      * 
      ***********************************************************/
+    /**
+     * This Arcade drive function is one that I have written myself as to make the
+     * process more efficient and customizable, while still not messing with
+     * PurePursuit and Watchdog code.
+     * 
+     * If everything is right then the function should be completely normal
+     * 
+     * @param mag
+     * @param yaw
+     */
 
-    // private double priorPosition = 0;
-    // private double curnposition = 0;
-    // private boolean first = false;
     public void arcadeDrive(double mag, double yaw) {
-        // yaw is weird
+        // clamp numbers
+        mag = MathUtil.clamp(mag, -1.0, 1.0);
+        yaw = MathUtil.clamp(yaw, -1.0, 1.0);
+
+        // Square the inputs (while preserving the sign) to increase fine control
+        // while permitting full power.
+        if (true) {
+            mag = Math.copySign(mag * mag, mag);
+            yaw = Math.copySign(yaw * yaw, yaw);
+        }
+
+        double leftOutput;
+        double rightOutput;
+
+        double maxInput = Math.copySign(Math.max(Math.abs(mag), Math.abs(yaw)), mag);
+        if(Math.abs(yaw) > Math.abs(mag)){
+            maxInput = maxInput * 0.8;
+        }
+        // big mag small yaw
+
+        if (mag >= 0.0) {
+            // First quadrant, else second quadrant
+            if (yaw >= 0.0) {
+                leftOutput = maxInput;
+                rightOutput = mag - yaw;
+            } else {
+                leftOutput = mag + yaw;
+                rightOutput = maxInput;
+            }
+        } else {
+            // Third quadrant, else fourth quadrant
+            if (yaw >= 0.0) {
+                leftOutput = mag + yaw;
+                rightOutput = maxInput;
+            } else {
+                leftOutput = maxInput;
+                rightOutput = mag - yaw;
+            }
+        }
+
+        mLeft_Master.set(MathUtil.clamp(leftOutput, -1.0, 1.0));
+        mRight_Master.set(MathUtil.clamp(rightOutput, -1.0, 1.0));
 
         // double leftMag = mag + yaw * (1 - (mag / .7));
         // double rightMag = mag - yaw * (1 - (mag / .7));
         // mLeft_Master.set(ControlMode.PercentOutput, leftMag);
         // mRight_Master.set(ControlMode.PercentOutput, rightMag);
-        mRoboDrive.arcadeDrive(mag, yaw, true);
+        // mRoboDrive.arcadeDrive(mag, yaw, true);
         mLog.periodicPrint("Mag: " + mag + " yaw: " + yaw, 20);
     }
 
