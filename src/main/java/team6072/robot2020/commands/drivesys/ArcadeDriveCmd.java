@@ -6,9 +6,10 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import team6072.robot2020.utility.LogitechJoystick;
+
+import team6072.robot2020.subsystems.DriveSys;
 import team6072.robot2020.utility.logging.LogWrapper;
 import team6072.robot2020.utility.logging.LogWrapper.FileType;
-import team6072.robot2020.subsystems.DriveSys;
 import team6072.robot2020.constants.logging.LoggerConstants;
 import team6072.robot2020.constants.subsystems.DriveSysConstants;
 
@@ -44,7 +45,6 @@ public class ArcadeDriveCmd implements Command {
      * Execute is called by the scheduler until the command returns finished or the
      * OI stops requesting - for example if the whileHeld() button command is used
      */
-
     public void execute() {
         double mag = mStick.getInvertedY();
         double yaw = mStick.getX();

@@ -17,5 +17,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
  * 
  * None of the motors need encoders
  */
-public class IntakeSys implements Subsystem{
+public class IntakeSys implements Subsystem {
+
+    
 }

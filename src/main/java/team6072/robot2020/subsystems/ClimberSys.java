@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
  *  1. Piston to lift the hook to position
  *  2. Motor to spool in the rope to climb, once hook is attached to bar
  */
-public class ClimberSys implements Subsystem{
+public class ClimberSys implements Subsystem {
 
 
 }

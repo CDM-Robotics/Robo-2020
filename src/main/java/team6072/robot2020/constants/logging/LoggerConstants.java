@@ -20,6 +20,7 @@ public class LoggerConstants {
     // Commands //
     public static Permission RELATIVE_DRIVE_CMD = Permission.ERRORS_ONLY;
     public static Permission ARCADE_DRIVE_CMD = Permission.ERRORS_ONLY;
+    public static Permission ROTATECS_CMD = Permission.WARNINGS_AND_ERRORS;
 
     // Control Board //
     public static Permission CONTROL_BOARD_PERMISSION = Permission.ALL;
