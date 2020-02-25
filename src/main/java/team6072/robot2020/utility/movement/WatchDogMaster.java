@@ -41,6 +41,12 @@ public class WatchDogMaster implements RunAndEndable {
          */
     }
 
+    /**
+     * STill need to test this
+     * 
+     * Also need to test if it is worth running the while loops every iteration or
+     * just letting the outer loop run
+     */
     public void run() {
         mCanRun = true;
         while (mCanRun) {

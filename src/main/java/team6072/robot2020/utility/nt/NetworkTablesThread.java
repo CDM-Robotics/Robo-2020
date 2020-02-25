@@ -77,6 +77,11 @@ public class NetworkTablesThread implements RunAndEndable {
       for (int i = 0; i < mListeners.size(); i++) {
         mListeners.get(i).checkState();
       }
+      try {
+        Thread.sleep(20);
+      } catch (InterruptedException err) {
+        mLog.error(err.toString());
+      }
     }
   }
 
