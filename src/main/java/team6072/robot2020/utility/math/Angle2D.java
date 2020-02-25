@@ -19,12 +19,12 @@ public class Angle2D {
      * Constructs a Angle2D with the given radian value. The x and y don't have
      * to be normalized.
      *
-     * @param value The value of the angle in radians.
+     * @param degrees The value of the angle in radians.
      */
-    public Angle2D(double value) {
-        m_value = value;
-        m_cos = Math.cos(value);
-        m_sin = Math.sin(value);
+    public Angle2D(double degrees) {        
+        m_value = Math.toRadians(degrees);
+        m_cos = Math.cos(m_value);
+        m_sin = Math.sin(m_value);
     }
 
     /**

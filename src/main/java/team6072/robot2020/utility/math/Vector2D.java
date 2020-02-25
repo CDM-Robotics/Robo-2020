@@ -147,9 +147,11 @@ public class Vector2D {
     }
 
     public Angle2D getAngle() {
-        double cos = x / getMag();
-        double sin = y / getMag();
-        return new Angle2D(sin, cos);
+        return new Angle2D(x, y);
+    }
+
+    public String toString(){
+        return "Vector2D (x: " + getX() + ", y: " + getY() + ", mag: " + getMag() + ", " + getAngle() + ")";
     }
 
 }
