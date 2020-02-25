@@ -141,12 +141,12 @@ public class Robot extends TimedRobot {
 			Vector2D seg = segments.get(0).getDelta();
 			Vector2D robotPos = curnAbsolutePosition.getPositionVector2D();
 			Vector2D start = segments.get(0).getStart();
-			Vector2D robotVector = Vector2D.addVectors(start.inverse(), robotPos);
+			Vector2D robotVector = start.inverse().translateBy(robotPos);
 
-			double dotProduct = Vector2D.dotProduct(seg, robotVector);
+			double dotProduct = robotVector.dotProduct(seg);
 			double percentOfSeg = dotProduct / (seg.getMagSquared());
-			Vector2D scaledDownSeg = Vector2D.scaleVector(seg, percentOfSeg);
-			Vector2D robotDisplacementVector = Vector2D.addVectors(scaledDownSeg.inverse(), robotVector);
+			Vector2D scaledDownSeg = seg.scaleVector(percentOfSeg);
+			Vector2D robotDisplacementVector = scaledDownSeg.inverse().translateBy(robotVector);
 
 			double robotDisplacementFromSegment = robotDisplacementVector.getMag();
 
@@ -154,12 +154,12 @@ public class Robot extends TimedRobot {
 
 			Vector2D seg2 = segments.get(1).getDelta();
 			Vector2D startSeg2 = segments.get(1).getStart();
-			Vector2D robotVectorS2 = Vector2D.addVectors(startSeg2.inverse(), robotPos);
+			Vector2D robotVectorS2 = startSeg2.inverse().translateBy(robotPos);
 
-			double dotProductS2 = Vector2D.dotProduct(seg2, robotVectorS2);
+			double dotProductS2 = seg2.dotProduct(robotVectorS2);
 			double percentOfSegS2 = dotProductS2 / (seg2.getMagSquared());
-			Vector2D scaledDownSegS2 = Vector2D.scaleVector(seg2, percentOfSegS2);
-			Vector2D robotDisplacementVectorS2 = Vector2D.addVectors(scaledDownSegS2.inverse(), robotVectorS2);
+			Vector2D scaledDownSegS2 = seg2.scaleVector(percentOfSegS2);
+			Vector2D robotDisplacementVectorS2 = scaledDownSegS2.inverse().translateBy(robotVectorS2);
 
 			double robotDisplacementFromSegment2 = robotDisplacementVectorS2.getMag();
 
@@ -179,11 +179,11 @@ public class Robot extends TimedRobot {
 
 			// test this too
 			double percentOfLookAheadVector = lookAheadDistance / segments.get(i).getDistance();
-			Vector2D lookAheadVector = Vector2D.scaleVector(segments.get(i).getDelta(), percentOfLookAheadVector);
-			Vector2D lookAheadPoint = Vector2D.addVectors(lookAheadVector, segments.get(i).getStart());
+			Vector2D lookAheadVector = segments.get(i).getDelta().scaleVector(percentOfLookAheadVector);
+			Vector2D lookAheadPoint = lookAheadVector.translateBy(segments.get(i).getStart());
 			
-			Vector2D robotHeadVector = Vector2D.getVectorFromMagAndDegrees(1, curnAbsolutePosition.getAngle2D().getDegrees());
-			Vector2D lookAheadPointVectorFromRobotPos = Vector2D.addVectors(lookAheadPoint, robotPos.inverse());
+			Vector2D robotHeadVector = Vector2D.fromMagAndAngle(1, new Angle2D(curnAbsolutePosition.getAngle2D().getDegrees()));
+			Vector2D lookAheadPointVectorFromRobotPos = lookAheadPoint.translateBy(robotPos.inverse());
 
 			// test which direction the robot should turn.
 			
