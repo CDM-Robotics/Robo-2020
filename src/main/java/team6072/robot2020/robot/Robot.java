@@ -23,6 +23,7 @@ import team6072.robot2020.utility.logging.LogWrapper.FileType;
 import team6072.robot2020.utility.math.Angle2D;
 import team6072.robot2020.utility.math.Position2D;
 import team6072.robot2020.utility.math.Vector2D;
+import team6072.robot2020.utility.math.Segment;
 import team6072.robot2020.utility.RunAndEndable;
 import team6072.robot2020.subsystems.ColorSensorSys;
 import team6072.robot2020.subsystems.DriveSys;
@@ -116,9 +117,92 @@ public class Robot extends TimedRobot {
 		startThreads();
 
 		// Schedule commands
-		// PurePursuitCmd purePursuitCmd = new PurePursuitCmd();
-		// mScheduler.schedule(purePursuitCmd);
-		mLog.alarm("Autonomous");	
+
+		mLog.alarm("Autonomous");
+		Vector2D p1 = new Vector2D(4 * 12, 2 * 12);
+		Vector2D p2 = new Vector2D(7 * 12, 1 * 12);
+		Segment s1 = new Segment(RobotTracker.getInstance().getAbsolutePosition().getPositionVector2D(), p1);
+		Segment s2 = new Segment(p1, p2);
+
+		ArrayList<Segment> segments = new ArrayList<Segment>();
+
+		boolean finished = false;
+
+		while (!finished) {
+			Position2D curnAbsolutePosition = RobotTracker.getInstance().getAbsolutePosition();
+			// get segment 0 delta vector, get curnposition vector added with the start
+			// poosition vector on the segment
+			// Then do the dot product of those vectors and divide that product with the
+			// magnitude of the segment squared. Then take taht number and scale the segment
+			// vector. then subtract that vector with the robotvector.
+
+			// Test this bit of code line by line to make it work
+
+			Vector2D seg = segments.get(0).getDelta();
+			Vector2D robotPos = curnAbsolutePosition.getPositionVector2D();
+			Vector2D start = segments.get(0).getStart();
+			Vector2D robotVector = Vector2D.addVectors(start.inverse(), robotPos);
+
+			double dotProduct = Vector2D.dotProduct(seg, robotVector);
+			double percentOfSeg = dotProduct / (seg.getMagSquared());
+			Vector2D scaledDownSeg = Vector2D.scaleVector(seg, percentOfSeg);
+			Vector2D robotDisplacementVector = Vector2D.addVectors(scaledDownSeg.inverse(), robotVector);
+
+			double robotDisplacementFromSegment = robotDisplacementVector.getMag();
+
+			// do the same with hte next vector
+
+			Vector2D seg2 = segments.get(1).getDelta();
+			Vector2D startSeg2 = segments.get(1).getStart();
+			Vector2D robotVectorS2 = Vector2D.addVectors(startSeg2.inverse(), robotPos);
+
+			double dotProductS2 = Vector2D.dotProduct(seg2, robotVectorS2);
+			double percentOfSegS2 = dotProductS2 / (seg2.getMagSquared());
+			Vector2D scaledDownSegS2 = Vector2D.scaleVector(seg2, percentOfSegS2);
+			Vector2D robotDisplacementVectorS2 = Vector2D.addVectors(scaledDownSegS2.inverse(), robotVectorS2);
+
+			double robotDisplacementFromSegment2 = robotDisplacementVectorS2.getMag();
+
+			if (robotDisplacementFromSegment > robotDisplacementFromSegment2) {
+				segments.remove(0);
+			}
+
+			double lookAheadDistance = (DriveSys.getInstance().getLeftCurnVelInches()
+					+ DriveSys.getInstance().getRightCurnVelInches()) / 2d;
+
+			// test this loop
+			int i = 0;
+			while(i < segments.size() && lookAheadDistance > segments.get(i).getDistance()){
+				lookAheadDistance = lookAheadDistance - segments.get(i).getDistance();
+				i++;
+			}
+
+			// test this too
+			double percentOfLookAheadVector = lookAheadDistance / segments.get(i).getDistance();
+			Vector2D lookAheadVector = Vector2D.scaleVector(segments.get(i).getDelta(), percentOfLookAheadVector);
+			Vector2D lookAheadPoint = Vector2D.addVectors(lookAheadVector, segments.get(i).getStart());
+			
+			Vector2D robotHeadVector = Vector2D.getVectorFromMagAndDegrees(1, curnAbsolutePosition.getAngle2D().getDegrees());
+			Vector2D lookAheadPointVectorFromRobotPos = Vector2D.addVectors(lookAheadPoint, robotPos.inverse());
+
+			// test which direction the robot should turn.
+			
+			// find the perpedicular vector of robotHead Vector
+			// reduce lookAheadPointVectorFromRobotPos by 2
+			// find the perpendicular line of lookAheadPointVectorFromRobotPos 
+
+			// find inntercection of those two lines
+
+			// get vector from robot pos to that point, to get radius
+			// get two radii
+			// caluculate speed at those points
+			// set motors
+			
+
+
+
+		}
+
 	}
 
 

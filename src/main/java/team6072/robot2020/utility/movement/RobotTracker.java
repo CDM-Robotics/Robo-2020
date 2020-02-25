@@ -161,7 +161,7 @@ public class RobotTracker implements RunAndEndable {
      */
     public Position2D getAbsolutePosition() {
         if (mReady == true) {
-            return new Position2D(mCurrentPosition, Angle2D.getAngle2DFromDegrees(mNavXSys.getYaw()));
+            return new Position2D(mCurrentPosition, Angle2D.fromDegrees(mNavXSys.getYaw()));
         } else {
             mLog.error("You haven't initialized the starting position for the Robot Tracker!!! "
                     + "Use RobotTracker.getinstance().setCurrentPosition(vector2D) to fix.");
