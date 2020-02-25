@@ -11,60 +11,6 @@ public class Vector2D {
 
     private double x, y, mag, magSquared;
 
-    public static Vector2D addVectors(Vector2D vector2d, Vector2D vector2d2) {
-        vector2d2.translateBy(vector2d);
-        return vector2d2;
-    }
-
-    public static double dotProduct(Vector2D vector2d, Vector2D vector2d2){
-        return (vector2d.getX() * vector2d2.getX() + vector2d.getY() * vector2d2.getY());
-    }
-
-    public static Vector2D scaleVector(Vector2D vector2d, double scalar){
-        return new Vector2D((vector2d.getX() * scalar), (vector2d.getY() * scalar));
-    }
-
-    /**
-     * This function creates a vector by using magnitude and degrees rather than an
-     * x and y coordinate. This is for convienence rather than necessity.
-     * 
-     * @param magnitude Distance or magnitude of the vector
-     * @param degrees   Degrees from zero. in Degrees
-     * @return Vector2D that represents the magnitude and direction specified by the
-     *         params
-     */
-    public static Vector2D getVectorFromMagAndDegrees(double magnitude, double degrees) {
-        double rad = degrees * 2 * Math.PI / 360;
-        double x = magnitude * Math.cos(rad);
-        double y = magnitude * Math.sin(rad);
-        return new Vector2D(x, y);
-    }
-
-    /**
-     * This function creates a vector by using magnitude and degrees rather than an
-     * x and y coordinate. This is for convienence rather than necessity.
-     * 
-     * @param magnitude Distance or magnitude of the vector
-     * @param degrees   Angle from zero. In Radians
-     * @return Vector2D that represents the magnitude and direction specified by the
-     *         params
-     */
-    public static Vector2D getVectorFromMagAndRadians(double magnitude, double radians) {
-        double x = magnitude * Math.cos(radians);
-        double y = magnitude * Math.sin(radians);
-        return new Vector2D(x, y);
-    }
-
-    /**
-     * @param x The x component of the vector
-     * @param y The y component of the vector
-     * @return a Vector2D that represents the x and y commponent vectors specified
-     *         by the x and y params
-     */
-    public static Vector2D getVectorFromXAndY(double x, double y) {
-        return new Vector2D(x, y);
-    }
-
     public Vector2D() {
         x = 0;
         y = 0;
@@ -79,9 +25,64 @@ public class Vector2D {
         this.magSquared = Math.pow(mag, 2);
     }
 
-    public void translateBy(Vector2D vector2d) {
-        x = x + vector2d.getX();
-        y = y + vector2d.getY();
+    /**
+     * This function creates a vector by using magnitude and degrees rather than an
+     * x and y coordinate. This is for convienence rather than necessity.
+     * 
+     * @param magnitude Distance or magnitude of the vector
+     * @param degrees   Degrees from zero. in Degrees
+     * @return Vector2D that represents the magnitude and direction specified by the
+     *         params
+     */
+    public static Vector2D fromMagAndAngle(double magnitude, Angle2D angle2d) {
+        double rad = angle2d.getDegrees() * 2 * Math.PI / 360;
+        double x = magnitude * Math.cos(rad);
+        double y = magnitude * Math.sin(rad);
+        return new Vector2D(x, y);
+    }
+
+    /**
+     * @param x The x component of the vector
+     * @param y The y component of the vector
+     * @return a Vector2D that represents the x and y commponent vectors specified
+     *         by the x and y params
+     */
+    public static Vector2D fromXAndY(double x, double y) {
+        return new Vector2D(x, y);
+    }
+
+    /**
+     * 
+     * This function adds two vectors together and returns the resulting
+     * 
+     * @param vector2d
+     * @param vector2d2
+     * @return
+     */
+    public Vector2D translateBy(Vector2D vector2d) {
+        return new Vector2D(x + vector2d.getX(), y + vector2d.getY());
+    }
+
+    /**
+     * This function does the dot product of the param vector and the current vector
+     * and returns the double
+     * 
+     * @param vector2d
+     * @return
+     */
+    public double dotProduct(Vector2D vector2d) {
+        return ((vector2d.getX() * x) + (vector2d.getY() * y));
+    }
+
+    /**
+     * This function scales a vector by a constant and returns the new scaled
+     * vector.
+     * 
+     * @param scalar the constant that the vector is being scaled by
+     * @return the new scaled vector
+     */
+    public Vector2D scaleVector(double scalar) {
+        return new Vector2D((x * scalar), (y * scalar));
     }
 
     /**
@@ -145,7 +146,7 @@ public class Vector2D {
         return new Vector2D(-x, -y);
     }
 
-    public Angle2D getAngle(){
+    public Angle2D getAngle() {
         double cos = x / getMag();
         double sin = y / getMag();
         return new Angle2D(sin, cos);

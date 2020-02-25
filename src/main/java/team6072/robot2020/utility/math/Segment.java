@@ -13,7 +13,7 @@ public class Segment{
     public Segment(Vector2D start, Vector2D end) {
         this.start = start;
         this.end = end;
-        delta = Vector2D.addVectors(start.inverse(), end);
+        delta = start.inverse().translateBy(end);
         deltaDist = Math.hypot(delta.getX(), delta.getY());
         deltaDistSquared = Math.pow(deltaDist, 2);
     }

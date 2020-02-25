@@ -7,7 +7,7 @@ public class Angle2D {
     private final double m_sin;
 
     /**
-     * Constructs a Rotation2d with a default angle of 0 degrees.
+     * Constructs a Angle2D with a default angle of 0 degrees.
      */
     public Angle2D() {
         m_value = 0.0;
@@ -16,7 +16,7 @@ public class Angle2D {
     }
 
     /**
-     * Constructs a Rotation2d with the given radian value. The x and y don't have
+     * Constructs a Angle2D with the given radian value. The x and y don't have
      * to be normalized.
      *
      * @param value The value of the angle in radians.
@@ -28,7 +28,7 @@ public class Angle2D {
     }
 
     /**
-     * Constructs a Rotation2d with the given x and y (cosine and sine) components.
+     * Constructs a Angle2D with the given x and y (cosine and sine) components.
      *
      * @param x The x component or cosine of the rotation.
      * @param y The y component or sine of the rotation.
@@ -47,7 +47,7 @@ public class Angle2D {
     }
 
     /**
-     * Constructs and returns a Rotation2d with the given degree value.
+     * Constructs and returns a Angle2D with the given degree value.
      *
      * @param degrees The value of the angle in degrees.
      * @return The rotation object with the desired angle value.
@@ -56,6 +56,15 @@ public class Angle2D {
         return new Angle2D(Math.toRadians(degrees));
     }
 
+    /**
+     * Constructs and returns a Angle2D with the given radian value.
+     *
+     * @param radians The value of the angle in radians.
+     * @return The rotation object with the desired angle value.
+     */
+    public static Angle2D fromRadians(double radians) {
+        return new Angle2D(radians);
+    }
 
     /*
      * Returns the radian value of the rotation.
@@ -104,11 +113,11 @@ public class Angle2D {
 
     @Override
     public String toString() {
-        return String.format("Rotation2d(Rads: %.2f, Deg: %.2f)", m_value, Math.toDegrees(m_value));
+        return String.format("Angle2D(Rads: %.2f, Deg: %.2f)", m_value, Math.toDegrees(m_value));
     }
 
     /**
-     * Checks equality between this Rotation2d and another object.
+     * Checks equality between this Angle2D and another object.
      *
      * @param obj The other object.
      * @return Whether the two objects are equal or not.

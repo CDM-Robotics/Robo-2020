@@ -123,8 +123,8 @@ public class RobotTracker implements RunAndEndable {
                 double deltaDistanceLeft = mDriveSys.getLeftCurnPosInches() - mLastLeftMotorPosition;
                 double deltaDistance = (deltaDistanceLeft + deltaDistanceRight) / 2;
 
-                Vector2D movementVector = Vector2D.getVectorFromMagAndDegrees(deltaDistance, mNavXSys.getYaw());
-                mCurrentPosition.translateBy(movementVector);
+                Vector2D movementVector = Vector2D.fromMagAndAngle(deltaDistance, Angle2D.fromDegrees(mNavXSys.getYaw()));
+                mCurrentPosition = mCurrentPosition.translateBy(movementVector);
 
                 mLastRightMotorPosition = mDriveSys.getRightCurnPosInches();
                 mLastLeftMotorPosition = mDriveSys.getLeftCurnPosInches();
