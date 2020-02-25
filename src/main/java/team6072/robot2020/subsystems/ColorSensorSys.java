@@ -41,10 +41,10 @@ import edu.wpi.first.wpilibj.util.Color;
  * be the same for both ALLIANCES. See Table 3-4 for details on how the TRENCH
  * light is used during POSTION CONTROL.
  */
-public class ColorSensor implements Subsystem {
+public class ColorSensorSys implements Subsystem {
 
 
-    private static ColorSensor mColorSensorSys;
+    private static ColorSensorSys mColorSensorSys;
 
     private Color mBlue;
     private Color mRed;
@@ -55,16 +55,16 @@ public class ColorSensor implements Subsystem {
     private ColorSensorV3 mSensor;
     private ColorMatch mColorMatch;
 
-    public static ColorSensor getInstance() {
+    public static ColorSensorSys getInstance() {
         if (mColorSensorSys == null) {
-            mColorSensorSys = new ColorSensor();
+            mColorSensorSys = new ColorSensorSys();
         }
         return mColorSensorSys;
     }
 
 
 
-    private ColorSensor() {
+    private ColorSensorSys() {
         mLog = new LogWrapper(FileType.SUBSYSTEM, "Color Sensor", LoggerConstants.COLOR_SENSOR_PERMISSION);
         mSensor = new ColorSensorV3(Port.kOnboard);
 

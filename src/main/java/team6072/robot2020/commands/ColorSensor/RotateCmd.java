@@ -7,7 +7,7 @@ import java.lang.module.ModuleDescriptor.Requires;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-import team6072.robot2020.subsystems.ColorSensor;
+import team6072.robot2020.subsystems.ColorSensorSys;
 import team6072.robot2020.utility.logging.LogWrapper;
 import team6072.robot2020.utility.logging.LogWrapper.FileType;
 import team6072.robot2020.constants.logging.LoggerConstants;
@@ -17,7 +17,7 @@ import team6072.robot2020.constants.logging.LoggerConstants;
 public class RotateCmd extends CommandBase {
 
 
-  private ColorSensor  mColorSys;
+  private ColorSensorSys  mColorSys;
   private LogWrapper mLog;
 
 
@@ -26,7 +26,7 @@ public class RotateCmd extends CommandBase {
    * Need to alert drive station if the wheel is not turning (i.e. drive wheels have not made contact with color wheel)
    * @param sys
    */
-  public RotateCmd(ColorSensor sys) {
+  public RotateCmd(ColorSensorSys sys) {
     mColorSys = sys;
     addRequirements(mColorSys);
     mLog = new LogWrapper(FileType.COMMAND, "RotateCS", LoggerConstants.ROTATECS_CMD);

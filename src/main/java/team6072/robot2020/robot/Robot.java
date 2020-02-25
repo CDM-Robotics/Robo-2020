@@ -25,7 +25,7 @@ import team6072.robot2020.utility.math.Position2D;
 import team6072.robot2020.utility.math.Vector2D;
 import team6072.robot2020.utility.math.Segment;
 import team6072.robot2020.utility.RunAndEndable;
-import team6072.robot2020.subsystems.ColorSensor;
+import team6072.robot2020.subsystems.ColorSensorSys;
 import team6072.robot2020.subsystems.DriveSys;
 import team6072.robot2020.commands.drivesys.RelativeDriveCmd;
 import team6072.robot2020.subsystems.NavXSys;
@@ -61,7 +61,7 @@ public class Robot extends TimedRobot {
 		NavXSys.getInstance();
 		ControlBoard.getInstance();
 		DriveSys.getInstance();
-		ColorSensor.getInstance();
+		ColorSensorSys.getInstance();
 
 		// initializing all the independent threads
 		threads = new ArrayList<RunAndEndable>();
