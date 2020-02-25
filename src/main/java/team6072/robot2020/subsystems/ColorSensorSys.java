@@ -129,10 +129,7 @@ public class ColorSensorSys implements Subsystem {
 
     private boolean mInRotate = false;
     private int mSegmentCount = 0;
-<<<<<<< HEAD
     private FMSUtility.Color startColor;
-=======
->>>>>>> 9f8e2793492758f911de78aaa7cd24e3a97aab32
 
     /**
      * implement the RotateCmd need to rotate wheel between 3 and 5 times alert
