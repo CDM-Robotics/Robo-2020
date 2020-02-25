@@ -1,16 +1,22 @@
 package team6072.robot2020.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
+
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.ColorSensorV3.RawColor;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.I2C.Port;
+
 import team6072.robot2020.utility.logging.LogWrapper;
 import team6072.robot2020.constants.logging.LoggerConstants;
 import team6072.robot2020.utility.FMSUtility;
 import team6072.robot2020.utility.logging.LogWrapper.FileType;
-import edu.wpi.first.wpilibj.util.Color;
+import team6072.robot2020.constants.subsystems.ColorSysConstants;
+
 
 
 
@@ -55,6 +61,9 @@ public class ColorSensorSys implements Subsystem {
     private ColorSensorV3 mSensor;
     private ColorMatch mColorMatch;
 
+    private WPI_TalonSRX mCSTalon;
+
+    
     public static ColorSensorSys getInstance() {
         if (mColorSensorSys == null) {
             mColorSensorSys = new ColorSensorSys();
@@ -79,6 +88,10 @@ public class ColorSensorSys implements Subsystem {
         mColorMatch.addColorMatch(mGreen);
         mColorMatch.addColorMatch(mYellow);
         mColorMatch.addColorMatch(mRed);
+
+        mCSTalon = new WPI_TalonSRX(ColorSysConstants.CS_TALON);
+        mCSTalon.setInverted(ColorSysConstants.CS_TALON_INVERT);
+        mCSTalon.setNeutralMode(ColorSysConstants.CS_TALON_NEUTRAL_MODE);
     }
 
 
@@ -116,14 +129,23 @@ public class ColorSensorSys implements Subsystem {
 
     private boolean mInRotate = false;
     private int mSegmentCount = 0;
+    private FMSUtility.Color startColor;
 
     /**
-     * implement the RotateCmd 
-     * need to rotate wheel between 3 and 5 times
-     * alert drive station if wheel is not turning
+     * implement the RotateCmd need to rotate wheel between 3 and 5 times alert
+     * drive station 
+     *      - if cannot detect color 
+     *      - if wheel is not turning
      */
 
      public void startRotateCmd() {
+         startColor = matchColor(); 
+         if (startColor == null) {
+             mLog.alarm("startRotateCmd:  cannot detect color");
+         }
 
      }
+
+
+
 }
