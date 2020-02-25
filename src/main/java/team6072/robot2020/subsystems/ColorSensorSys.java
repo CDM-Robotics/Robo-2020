@@ -1,5 +1,6 @@
 package team6072.robot2020.subsystems;
 
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
@@ -14,16 +15,33 @@ import edu.wpi.first.wpilibj.util.Color;
 
 
 /**
- * Color sensor is responsilbe for
+ * Color sensor is responsilbe for 
  *  1. detecting the color of the wheel 
  *  2. driving the wheel to the correct position
  * 
- * Elements are:
- *  1. color sensor
- *  2. piston to move the sensor and driving wheel into position
+ * Elements are: 
+ *  1. color sensor 
+ *  2. piston to move the sensor and driving wheel into position 
  *  3. motor with encoder to drive the wheel
+ * 
+ * Each CONTROL PANEL has two (2) requirements in order to ENERGIZE the SHIELD
+ * GENERATOR, see CONTROL PANEL Scoring for complete details on game play. 
+ * 
+ * ROTATION CONTROL: Rotate CONTROL PANEL at least three (3) (but no more than
+ * five (5)) complete revolutions in the same direction. If the CONTROL PANEL is
+ * rotated more than five (5) complete revolutions, the count resets to zero
+ * (0). The TRENCH light turns on once Stage 2 CAPACITY is reached (i.e. the
+ * CONTROL PANEL is ready for ROTATION CONTROL).
+ * 
+ * POSITION CONTROL: Rotate CONTROL PANEL so a specified color aligns with the
+ * sensor for at least five (5) seconds. Once either ALLIANCE reaches Stage 3
+ * CAPACITY, FMS relays a specified color (randomly selected by FMS and one (1)
+ * of the three (3) colors not currently read by the ALLIANCE’S TRENCH color
+ * sensor) to all OPERATOR CONSOLES simultaneously. The specified color may not
+ * be the same for both ALLIANCES. See Table 3-4 for details on how the TRENCH
+ * light is used during POSTION CONTROL.
  */
-public class ColorSensorSys {
+public class ColorSensorSys implements Subsystem {
 
 
     private static ColorSensorSys mColorSensorSys;
@@ -44,6 +62,8 @@ public class ColorSensorSys {
         return mColorSensorSys;
     }
 
+
+
     private ColorSensorSys() {
         mLog = new LogWrapper(FileType.SUBSYSTEM, "Color Sensor", LoggerConstants.COLOR_SENSOR_PERMISSION);
         mSensor = new ColorSensorV3(Port.kOnboard);
@@ -61,9 +81,13 @@ public class ColorSensorSys {
         mColorMatch.addColorMatch(mRed);
     }
 
+
+
     public int getDistance() {
         return mSensor.getProximity();
     }
+
+
 
     public FMSUtility.Color matchColor() {
         Color color = mSensor.getColor();
@@ -85,4 +109,22 @@ public class ColorSensorSys {
         return mSensor.getColor();
     }
 
+
+    // 
+    // ---------------------------------------------------------------------
+    //
+
+    private boolean mInRotate = false;
+    private int mSegmentCount = 0;
+    private 
+
+    /**
+     * implement the RotateCmd 
+     * need to rotate wheel between 3 and 5 times
+     * alert drive station if wheel is not turning
+     */
+
+     public void startRotateCmd() {
+
+     }
 }

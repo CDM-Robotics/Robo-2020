@@ -73,6 +73,7 @@ public class Robot extends TimedRobot {
 		RobotTracker.getInstance().setCurrentPosition(new Vector2D()); // set starting point on XY plane
 	}
 
+
 	private void configLogging() {
 		mLog = new LogWrapper(FileType.ROBOT, "Robot", team6072.robot2020.utility.logging.LogWrapper.Permission.ALL);
 		try {
@@ -90,6 +91,7 @@ public class Robot extends TimedRobot {
 		}
 		mJLog = new JLogWrapper(Robot.class.getName());
 	}
+
 
 	/**
 	 * starts all the independent threads in the threads Array list
@@ -203,10 +205,12 @@ public class Robot extends TimedRobot {
 
 	}
 
+
 	@Override
 	public void autonomousPeriodic() {
 		mScheduler.run();
 	}
+
 
 	/**
 	 * Teleop code -------------------------------------------------------------
@@ -226,6 +230,7 @@ public class Robot extends TimedRobot {
 		mScheduler.schedule(arcadeDriveCmd);
 	}
 
+
 	@Override
 	public void teleopPeriodic() {
 		try {
@@ -240,6 +245,7 @@ public class Robot extends TimedRobot {
 		}
 	}
 
+	
 	/**
 	 * Disabled init, occurs whenever the robot is in disable mode.
 	 */

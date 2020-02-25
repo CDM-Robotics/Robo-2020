@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
  *  3. Hood adjust motor - with encoder
  *  4. Ball into motor - no encoder, on/off
  */
-public class ShooterSys implements Subsystem{
+public class ShooterSys implements Subsystem  {
 
 
 }
