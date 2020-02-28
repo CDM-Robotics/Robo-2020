@@ -129,7 +129,9 @@ public class ColorSensorSys implements Subsystem {
 
     private boolean mInRotate = false;
     private int mSegmentCount = 0;
-    private FMSUtility.Color startColor;
+    private FMSUtility.Color mStartColor;
+    private FMSUtility.Color mLastColor;
+    private int mExecCallsSinceLastTransition;
 
     /**
      * implement the RotateCmd need to rotate wheel between 3 and 5 times alert
@@ -138,12 +140,54 @@ public class ColorSensorSys implements Subsystem {
      *      - if wheel is not turning
      */
 
+     /**
+      * Check what color we are on, and start the wheel turning
+      * Need to test if we need to drive the robot forward at low power to keep engaged with wheel
+      * If cannot detect color, alert drive station
+      * When > 3 revs, stop wheel
+      */
      public void startRotateCmd() {
-         startColor = matchColor(); 
-         if (startColor == null) {
+         mStartColor = matchColor(); 
+         if (mStartColor == null) {
              mLog.alarm("startRotateCmd:  cannot detect color");
          }
+         mLastColor = mStartColor;
+         mExecCallsSinceLastTransition = 0;
+         mSegmentCount = 0;
+         mInRotate = true;
+         mCSTalon.set(ColorSysConstants.CS_TALON_ROTATESPEED);
+     }
 
+
+     /**
+      * Count the color transitions to see how far we have gone
+      * Once we have done 2.5 revolutions, start slowing down
+      * If the wheel stops spinning, alert driver
+      */
+     public void execRotateCmd() {
+        FMSUtility.Color currentCol = matchColor();
+        if (currentCol != mLastColor) {
+            mSegmentCount++;
+            mLastColor = currentCol;
+            mExecCallsSinceLastTransition = 0;
+        }
+        mExecCallsSinceLastTransition++;
+        if (mExecCallsSinceLastTransition > 50 * 3) {
+            // haven't had a color transition for 3 seconds - PANIC
+            mLog.alarm("execRotateCmd:  ----  Color wheel not rotating  ----");
+        }
+        if (mSegmentCount >= 13) {
+            mCSTalon.set(0);
+            mInRotate = false;
+        }
+        else if (mSegmentCount >= 10) {
+            mCSTalon.set(ColorSysConstants.CS_TALON_ROTATESPEED / 2);
+        }
+     }
+
+
+     public boolean isRotateFinished() {
+         return !mInRotate;
      }
 
 
