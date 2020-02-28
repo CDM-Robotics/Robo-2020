@@ -7,16 +7,21 @@
 
 package team6072.robot2020.robot;
 
-import team6072.robot2020.utility.LogitechJoystick;
-import team6072.robot2020.constants.ControlBoardConstants;
-import team6072.robot2020.constants.logging.LoggerConstants;
-import team6072.robot2020.utility.logging.LogWrapper;
-import team6072.robot2020.utility.logging.LogWrapper.FileType;
-import team6072.robot2020.utility.logging.LogWrapper.Permission;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+
+
+import team6072.robot2020.utility.LogitechJoystick;
+import team6072.robot2020.constants.ControlBoardConstants;
+import team6072.robot2020.constants.logging.LoggerConstants;
+import team6072.robot2020.subsystems.ColorSensorSys;
+import team6072.robot2020.utility.logging.LogWrapper;
+import team6072.robot2020.utility.logging.LogWrapper.FileType;
+import team6072.robot2020.utility.logging.LogWrapper.Permission;
+
+import team6072.robot2020.commands.ColorSensor.*;
 
 
 
@@ -72,18 +77,36 @@ public class ControlBoard {
 
     /**
      * Initializes all buttons and joystick controls to standard Commands
-     * Note that this is to initialize commands that are teh same in Autonomous and Teleop
+     * Note that this is to initialize commands that are the same in Autonomous and Teleop
      * 
      */
     private ControlBoard() {
         mDriveStick = new LogitechJoystick(DRIVE_USB_PORT);
         mControlStick = new LogitechJoystick(CONTROL_USB_PORT);
         // CommandScheduler.getInstance().schedule(new RelativeDriveCmd(mJoystick0));
+
+
+        // Drive Stick Commands --------------------------------------
+
+
+
+        // Control Stick Commands ------------------------------------
+
+        MapCmdToBut(mControlStick, EXTREME_BUT_12, new RotateCmd(ColorSensorSys.getInstance()), null);
+
+
     }
 
 
 
 
+    /**
+     * Map a button to one or two commands
+     * @param stick
+     * @param button
+     * @param pressCmd      command to exec when pressed
+     * @param releaseCmd    command to exec when released (may be null)
+     */
     private void MapCmdToBut(LogitechJoystick stick, int button, Command pressCmd, Command releaseCmd) {
         JoystickButton but = new JoystickButton(stick, button);
         if (pressCmd != null) {

@@ -96,13 +96,17 @@ public class ColorSensorSys implements Subsystem {
 
 
 
-    public int getDistance() {
+    private int getDistance() {
         return mSensor.getProximity();
     }
 
 
 
-    public FMSUtility.Color matchColor() {
+    /**
+     * Read the current sensor color and translate to the FMS color
+     * @return
+     */
+    private FMSUtility.Color getSensorFMSColor() {
         Color color = mSensor.getColor();
         ColorMatchResult result = mColorMatch.matchClosestColor(color);
         if (result.color == mBlue) {
@@ -118,9 +122,6 @@ public class ColorSensorSys implements Subsystem {
         }
     }
 
-    public Color getColor() {
-        return mSensor.getColor();
-    }
 
 
     // 
@@ -129,7 +130,9 @@ public class ColorSensorSys implements Subsystem {
 
     private boolean mInRotate = false;
     private int mSegmentCount = 0;
-    private FMSUtility.Color startColor;
+    private FMSUtility.Color mStartColor;
+    private FMSUtility.Color mLastColor;
+    private int mExecCallsSinceLastTransition;
 
     /**
      * implement the RotateCmd need to rotate wheel between 3 and 5 times alert
@@ -138,14 +141,94 @@ public class ColorSensorSys implements Subsystem {
      *      - if wheel is not turning
      */
 
+     /**
+      * Check what color we are on, and start the wheel turning
+      * Need to test if we need to drive the robot forward at low power to keep engaged with wheel
+      * If cannot detect color, alert drive station
+      * When > 3 revs, stop wheel
+      */
      public void startRotateCmd() {
-         startColor = matchColor(); 
-         if (startColor == null) {
+         mStartColor = getSensorFMSColor(); 
+         if (mStartColor == null) {
              mLog.alarm("startRotateCmd:  cannot detect color");
          }
-
+         mLastColor = mStartColor;
+         mExecCallsSinceLastTransition = 0;
+         mSegmentCount = 0;
+         mInRotate = true;
+         mCSTalon.set(ColorSysConstants.CS_TALON_ROTATESPEED);
      }
 
 
+     /**
+      * Count the color transitions to see how far we have gone
+      * Once we have done 2.5 revolutions, start slowing down
+      * If the wheel stops spinning, alert driver
+      */
+     public void execRotateCmd() {
+        FMSUtility.Color currentCol = getSensorFMSColor();
+        if (currentCol != mLastColor) {
+            mSegmentCount++;
+            mLastColor = currentCol;
+            mExecCallsSinceLastTransition = 0;
+        }
+        mExecCallsSinceLastTransition++;
+        if (mExecCallsSinceLastTransition > 50 * 3) {
+            // haven't had a color transition for 3 seconds - PANIC
+            mLog.alarm("execRotateCmd:  ----  Color wheel not rotating  ----");
+        }
+        if (mSegmentCount >= 13) {
+            mCSTalon.set(0);
+            mInRotate = false;
+        }
+        else if (mSegmentCount >= 10) {
+            mCSTalon.set(ColorSysConstants.CS_TALON_ROTATESPEED / 2);
+        }
+     }
+
+
+     public boolean isRotateFinished() {
+         return !mInRotate;
+     }
+
+
+     //
+     //  rotate to target  --------------------------------------------------------
+     //
+
+     /**
+     * POSITION CONTROL: Rotate CONTROL PANEL so a specified color aligns with the
+     * sensor for at least five (5) seconds. Once either ALLIANCE reaches Stage 3
+     * CAPACITY, FMS relays a specified color (randomly selected by FMS and one (1)
+     * of the three (3) colors not currently read by the ALLIANCE’S TRENCH color
+     * sensor) to all OPERATOR CONSOLES simultaneously. The specified color may not
+     * be the same for both ALLIANCES. See Table 3-4 for details on how the TRENCH
+     * light is used during POSTION CONTROL.
+     * 
+     * Process
+     *  read the required color from FMS
+     *  calculate color we need under our sensor, number of segments to move
+     *  move required segments
+     *  hold segment for five seconds = 5 * 50 calls to exec
+     */
+
+
+     private boolean mTargComplete = false;
+     private FMSUtility.Color mFMSTargColor;
+     private FMSUtility.Color mStartTargColor;
+
+
+     public void initMoveTarget() {
+        mTargComplete = false;
+     }
+
+
+     public void execMoveTarget() {
+
+     }
+
+     public boolean isMoveTargetFinished() {
+        return mTargComplete;
+     }
 
 }
