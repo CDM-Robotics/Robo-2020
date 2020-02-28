@@ -96,13 +96,17 @@ public class ColorSensorSys implements Subsystem {
 
 
 
-    public int getDistance() {
+    private int getDistance() {
         return mSensor.getProximity();
     }
 
 
 
-    public FMSUtility.Color matchColor() {
+    /**
+     * Read the current sensor color and translate to the FMS color
+     * @return
+     */
+    private FMSUtility.Color getSensorFMSColor() {
         Color color = mSensor.getColor();
         ColorMatchResult result = mColorMatch.matchClosestColor(color);
         if (result.color == mBlue) {
@@ -118,9 +122,6 @@ public class ColorSensorSys implements Subsystem {
         }
     }
 
-    public Color getColor() {
-        return mSensor.getColor();
-    }
 
 
     // 
@@ -147,7 +148,7 @@ public class ColorSensorSys implements Subsystem {
       * When > 3 revs, stop wheel
       */
      public void startRotateCmd() {
-         mStartColor = matchColor(); 
+         mStartColor = getSensorFMSColor(); 
          if (mStartColor == null) {
              mLog.alarm("startRotateCmd:  cannot detect color");
          }
@@ -165,7 +166,7 @@ public class ColorSensorSys implements Subsystem {
       * If the wheel stops spinning, alert driver
       */
      public void execRotateCmd() {
-        FMSUtility.Color currentCol = matchColor();
+        FMSUtility.Color currentCol = getSensorFMSColor();
         if (currentCol != mLastColor) {
             mSegmentCount++;
             mLastColor = currentCol;
@@ -191,5 +192,43 @@ public class ColorSensorSys implements Subsystem {
      }
 
 
+     //
+     //  rotate to target  --------------------------------------------------------
+     //
+
+     /**
+     * POSITION CONTROL: Rotate CONTROL PANEL so a specified color aligns with the
+     * sensor for at least five (5) seconds. Once either ALLIANCE reaches Stage 3
+     * CAPACITY, FMS relays a specified color (randomly selected by FMS and one (1)
+     * of the three (3) colors not currently read by the ALLIANCE’S TRENCH color
+     * sensor) to all OPERATOR CONSOLES simultaneously. The specified color may not
+     * be the same for both ALLIANCES. See Table 3-4 for details on how the TRENCH
+     * light is used during POSTION CONTROL.
+     * 
+     * Process
+     *  read the required color from FMS
+     *  calculate color we need under our sensor, number of segments to move
+     *  move required segments
+     *  hold segment for five seconds = 5 * 50 calls to exec
+     */
+
+
+     private boolean mTargComplete = false;
+     private FMSUtility.Color mFMSTargColor;
+     private FMSUtility.Color mStartTargColor;
+
+
+     public void initMoveTarget() {
+        mTargComplete = false;
+     }
+
+
+     public void execMoveTarget() {
+
+     }
+
+     public boolean isMoveTargetFinished() {
+        return mTargComplete;
+     }
 
 }

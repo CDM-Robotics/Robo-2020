@@ -36,19 +36,21 @@ public class RotateCmd extends CommandBase {
   // Called just before this Command runs the first time
   @Override
   public void initialize() {
+    mColorSys.startRotateCmd();
   }
 
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   public void execute() {
+    mColorSys.execRotateCmd();
   }
 
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   public boolean isFinished() {
-    return false;
+    return mColorSys.isRotateFinished();
   }
 
 
