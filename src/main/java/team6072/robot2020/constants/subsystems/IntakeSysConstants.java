@@ -15,14 +15,17 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
  */
 public class IntakeSysConstants {
 
+    public static final int INTAKE_TALON = 2;
     public static final boolean INTAKE_TALON_INVERT = false;
     public static final double INTAKE_TALON_ROTATESPEED = 0.3;
     public static final NeutralMode INTAKE_TALON_NEUTRAL_MODE = NeutralMode.Coast;
 
+    public static final int BELT_TALON = 3;
     public static final boolean BELT_TALON_INVERT = false;
     public static final double BELT_TALON_ROTATESPEED = 0.3;
     public static final NeutralMode IBELT_TALON_NEUTRAL_MODE = NeutralMode.Coast;
 
+    public static final int CAN_TALON = 4;
     public static final boolean CAN_TALON_INVERT = false;
     public static final double CAN_TALON_ROTATESPEED = 0.3;
     public static final NeutralMode CAN_TALON_NEUTRAL_MODE = NeutralMode.Coast;

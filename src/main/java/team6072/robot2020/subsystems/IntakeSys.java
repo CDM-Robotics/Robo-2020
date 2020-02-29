@@ -31,4 +31,19 @@ public class IntakeSys implements Subsystem {
     private WPI_TalonSRX mBeltMotor;
     private WPI_TalonSRX mCanistorMotor;
     
+
+
+    private IntakeSys() {
+        mIntakeMotor = new WPI_TalonSRX(IntakeSysConstants.INTAKE_TALON);
+        mIntakeMotor.setInverted(IntakeSysConstants.INTAKE_TALON_INVERT);
+        mIntakeMotor.setNeutralMode(IntakeSysConstants.INTAKE_TALON_NEUTRAL_MODE);
+
+        mBeltMotor = new WPI_TalonSRX(IntakeSysConstants.BELT_TALON);
+        mBeltMotor.setInverted(IntakeSysConstants.BELT_TALON_INVERT);
+        mBeltMotor.setNeutralMode(IntakeSysConstants.BELT_TALON_NEUTRAL_MODE);
+
+        mIntakeMotor = new WPI_TalonSRX(IntakeSysConstants.INTAKE_TALON);
+        mIntakeMotor.setInverted(IntakeSysConstants.INTAKE_TALON_INVERT);
+        mIntakeMotor.setNeutralMode(IntakeSysConstants.INTAKE_TALON_NEUTRAL_MODE);
+    }
 }
