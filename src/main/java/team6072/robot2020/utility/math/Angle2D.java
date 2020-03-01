@@ -1,6 +1,9 @@
 package team6072.robot2020.utility.math;
 
 
+/**
+ * Represents an angle
+ */
 public class Angle2D {
     private final double m_value;
     private final double m_cos;

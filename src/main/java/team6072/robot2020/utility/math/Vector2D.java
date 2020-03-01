@@ -150,7 +150,40 @@ public class Vector2D {
         return new Angle2D(x, y);
     }
 
-    public String toString(){
+    /**
+     * Gets the param Vector's projection onto the current Vector
+     * 
+     * Dot products the vectors together and divides that number by the magnitude of
+     * the current vector squared
+     * 
+     * Then multiplies that number by the current vector
+     * 
+     * @param vector2d
+     * @return
+     */
+    public Vector2D getProjectionVector(Vector2D vector2d) {
+        double percent = getProjectionPercentage(vector2d);
+        Vector2D scaledVector = scaleVector(percent);
+        return scaledVector;
+    }
+
+    /**
+     * gets the Param Vector's projection and finds the percentage of it on the
+     * current vector
+     * 
+     * Dot products the vectors together and divides that number by the magnitude of
+     * the current vector squared
+     * 
+     * @param vector2d
+     * @return
+     */
+    public double getProjectionPercentage(Vector2D vector2d) {
+        double dotProduct = dotProduct(vector2d);
+        double percentOfSeg = dotProduct / (getMagSquared());
+        return percentOfSeg;
+    }
+
+    public String toString() {
         return "Vector2D (x: " + getX() + ", y: " + getY() + ", mag: " + getMag() + ", " + getAngle() + ")";
     }
 

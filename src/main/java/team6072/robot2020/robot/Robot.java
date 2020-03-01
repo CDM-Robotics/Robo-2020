@@ -73,7 +73,6 @@ public class Robot extends TimedRobot {
 		RobotTracker.getInstance().setCurrentPosition(new Vector2D()); // set starting point on XY plane
 	}
 
-
 	private void configLogging() {
 		mLog = new LogWrapper(FileType.ROBOT, "Robot", team6072.robot2020.utility.logging.LogWrapper.Permission.ALL);
 		try {
@@ -91,7 +90,6 @@ public class Robot extends TimedRobot {
 		}
 		mJLog = new JLogWrapper(Robot.class.getName());
 	}
-
 
 	/**
 	 * starts all the independent threads in the threads Array list
@@ -121,6 +119,7 @@ public class Robot extends TimedRobot {
 		mLog.alarm("Autonomous");
 		Vector2D p1 = new Vector2D(4 * 12, 2 * 12);
 		Vector2D p2 = new Vector2D(7 * 12, 1 * 12);
+
 		Segment s1 = new Segment(RobotTracker.getInstance().getAbsolutePosition().getPositionVector2D(), p1);
 		Segment s2 = new Segment(p1, p2);
 
@@ -130,66 +129,67 @@ public class Robot extends TimedRobot {
 
 		while (!finished) {
 			Position2D curnAbsolutePosition = RobotTracker.getInstance().getAbsolutePosition();
-			// get segment 0 delta vector, get curnposition vector added with the start
-			// poosition vector on the segment
-			// Then do the dot product of those vectors and divide that product with the
-			// magnitude of the segment squared. Then take taht number and scale the segment
-			// vector. then subtract that vector with the robotvector.
-
-			// Test this bit of code line by line to make it work
-
-			Vector2D seg = segments.get(0).getDelta();
 			Vector2D robotPos = curnAbsolutePosition.getPositionVector2D();
-			Vector2D start = segments.get(0).getStart();
-			Vector2D robotVector = start.inverse().translateBy(robotPos);
 
-			double dotProduct = robotVector.dotProduct(seg);
-			double percentOfSeg = dotProduct / (seg.getMagSquared());
-			Vector2D scaledDownSeg = seg.scaleVector(percentOfSeg);
-			Vector2D robotDisplacementVector = scaledDownSeg.inverse().translateBy(robotVector);
-
-			double robotDisplacementFromSegment = robotDisplacementVector.getMag();
-
-			// do the same with hte next vector
-
-			Vector2D seg2 = segments.get(1).getDelta();
-			Vector2D startSeg2 = segments.get(1).getStart();
-			Vector2D robotVectorS2 = startSeg2.inverse().translateBy(robotPos);
-
-			double dotProductS2 = seg2.dotProduct(robotVectorS2);
-			double percentOfSegS2 = dotProductS2 / (seg2.getMagSquared());
-			Vector2D scaledDownSegS2 = seg2.scaleVector(percentOfSegS2);
-			Vector2D robotDisplacementVectorS2 = scaledDownSegS2.inverse().translateBy(robotVectorS2);
-
-			double robotDisplacementFromSegment2 = robotDisplacementVectorS2.getMag();
-
-			if (robotDisplacementFromSegment > robotDisplacementFromSegment2) {
-				segments.remove(0);
+			// Path function - updatePath
+			if (segments.size() > 1) {
+				double robotDisplacementFromSegment1 = segments.get(0).getPerpendicularDistance(robotPos);
+				double robotDisplacementFromSegment2 = segments.get(1).getPerpendicularDistance(robotPos);
+				if (robotDisplacementFromSegment1 > robotDisplacementFromSegment2) {
+					segments.remove(0);
+				}
 			}
 
+			// Path Function - getLookAheadDistance
 			double lookAheadDistance = (DriveSys.getInstance().getLeftCurnVelInches()
 					+ DriveSys.getInstance().getRightCurnVelInches()) / 2d;
-
-			// test this loop
+			lookAheadDistance = lookAheadDistance + segments.get(0).getParrellelDistance(robotPos);
 			int i = 0;
-			while(i < segments.size() && lookAheadDistance > segments.get(i).getDistance()){
+			while (i < segments.size() && lookAheadDistance > segments.get(i).getDistance()) {
 				lookAheadDistance = lookAheadDistance - segments.get(i).getDistance();
 				i++;
 			}
 
-			// test this too
+			// Path function - getLookAheadPoint
 			double percentOfLookAheadVector = lookAheadDistance / segments.get(i).getDistance();
 			Vector2D lookAheadVector = segments.get(i).getDelta().scaleVector(percentOfLookAheadVector);
 			Vector2D lookAheadPoint = lookAheadVector.translateBy(segments.get(i).getStart());
-			
-			Vector2D robotHeadVector = Vector2D.fromMagAndAngle(1, new Angle2D(curnAbsolutePosition.getAngle2D().getDegrees()));
+
+			// Path Function - getRadius
+			Vector2D robotHeadVector = Vector2D.fromMagAndAngle(1,
+					new Angle2D(curnAbsolutePosition.getAngle2D().getDegrees()));
 			Vector2D lookAheadPointVectorFromRobotPos = lookAheadPoint.translateBy(robotPos.inverse());
 
-			// test which direction the robot should turn.
+			Angle2D robotHead = robotHeadVector.getAngle();
+			Angle2D lookAheadHeading = lookAheadPointVectorFromRobotPos.getAngle();
+
+			double robotHeadingDegrees = robotHead.getDegrees();
+			double lookAheadHeadingDegrees = lookAheadHeading.getDegrees();
+			boolean direction; // true is right and left
+			if(Math.abs(robotHeadingDegrees) > 180){
+				if(robotHeadingDegrees > 0){
+					robotHeadingDegrees -= 360;
+				} else {
+					robotHeadingDegrees += 360;
+				}
+			}
+			if(Math.abs(lookAheadHeadingDegrees) < 180){
+				if (lookAheadHeadingDegrees > 0) {
+					lookAheadHeadingDegrees -= 360;
+				} else {
+					lookAheadHeadingDegrees += 360;
+				}
+			}
 			
-			// find the perpedicular vector of robotHead Vector
+			if((lookAheadHeadingDegrees - robotHeadingDegrees) > 0){
+				robotHeadVector.rotateBy(new Angle2D(90));
+			} else {
+				robotHeadVector.rotateBy(new Angle2D(-90));
+			}
+			
 			// reduce lookAheadPointVectorFromRobotPos by 2
-			// find the perpendicular line of lookAheadPointVectorFromRobotPos 
+
+			// find the perpendicular line of lookAheadPointVectorFromRobotPos
 
 			// find inntercection of those two lines
 
@@ -197,20 +197,15 @@ public class Robot extends TimedRobot {
 			// get two radii
 			// caluculate speed at those points
 			// set motors
-			
-
-
 
 		}
 
 	}
 
-
 	@Override
 	public void autonomousPeriodic() {
 		mScheduler.run();
 	}
-
 
 	/**
 	 * Teleop code -------------------------------------------------------------
@@ -230,7 +225,6 @@ public class Robot extends TimedRobot {
 		mScheduler.schedule(arcadeDriveCmd);
 	}
 
-
 	@Override
 	public void teleopPeriodic() {
 		try {
@@ -245,7 +239,6 @@ public class Robot extends TimedRobot {
 		}
 	}
 
-	
 	/**
 	 * Disabled init, occurs whenever the robot is in disable mode.
 	 */
