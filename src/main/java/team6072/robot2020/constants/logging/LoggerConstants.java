@@ -9,6 +9,8 @@ public class LoggerConstants {
     public static Permission ELVSYS_PERMISSION = Permission.ALL;
     public static Permission NAVXSYS_PERMISSION = Permission.ALL;
     public static Permission COLOR_SENSOR_PERMISSION = Permission.ALL;
+    public static Permission INTAKE_PERMISSION = Permission.ALL;
+    public static Permission CLIMBER_PERMISSION = Permission.ALL;
 
 
     // Utility // 

@@ -16,12 +16,14 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import team6072.robot2020.utility.LogitechJoystick;
 import team6072.robot2020.constants.ControlBoardConstants;
 import team6072.robot2020.constants.logging.LoggerConstants;
-import team6072.robot2020.subsystems.ColorSensorSys;
 import team6072.robot2020.utility.logging.LogWrapper;
 import team6072.robot2020.utility.logging.LogWrapper.FileType;
 import team6072.robot2020.utility.logging.LogWrapper.Permission;
 
+import team6072.robot2020.subsystems.ColorSensorSys;
 import team6072.robot2020.commands.ColorSensor.*;
+import team6072.robot2020.commands.Intake.*;
+
 
 
 
@@ -92,6 +94,9 @@ public class ControlBoard {
 
         // Control Stick Commands ------------------------------------
 
+        MapCmdToBut(mControlStick, EXTREME_BUT_TRIGGER, new IntakeWheelsInCmd(),new IntakeWheelsStopCmd());
+        MapCmdToBut(mControlStick, EXTREME_BUT_7, new BeltWheelsInCmd(), null);
+        MapCmdToBut(mControlStick, EXTREME_BUT_8, new BeltWheelsOutCmd(), null);
         MapCmdToBut(mControlStick, EXTREME_BUT_12, new RotateCmd(ColorSensorSys.getInstance()), null);
 
 
