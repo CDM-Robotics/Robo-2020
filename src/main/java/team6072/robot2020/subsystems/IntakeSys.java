@@ -109,4 +109,8 @@ public class IntakeSys implements Subsystem {
         mBeltMotor.set(-1);
     }
 
+    public void beltMotorStop() {
+        mBeltMotor.set(0);
+    }
+
 }

@@ -17,7 +17,8 @@ import team6072.robot2020.utility.FMSUtility;
 import team6072.robot2020.utility.logging.LogWrapper.FileType;
 import team6072.robot2020.constants.subsystems.ColorSysConstants;
 
-
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import team6072.robot2020.constants.subsystems.PneumaticsConstants;
 
 
 /**
@@ -62,7 +63,8 @@ public class ColorSensorSys implements Subsystem {
     private ColorMatch mColorMatch;
 
     private WPI_TalonSRX mCSTalon;
-
+    
+    private DoubleSolenoid mColorWheelSolenoid;
     
     public static ColorSensorSys getInstance() {
         if (mColorSensorSys == null) {
@@ -92,6 +94,9 @@ public class ColorSensorSys implements Subsystem {
         mCSTalon = new WPI_TalonSRX(ColorSysConstants.CS_TALON);
         mCSTalon.setInverted(ColorSysConstants.CS_TALON_INVERT);
         mCSTalon.setNeutralMode(ColorSysConstants.CS_TALON_NEUTRAL_MODE);
+
+        mColorWheelSolenoid = new DoubleSolenoid(PneumaticsConstants.PCMID, ColorSysConstants.COLOR_UP,
+                ColorSysConstants.COLOR_DOWN);
     }
 
 
@@ -230,5 +235,14 @@ public class ColorSensorSys implements Subsystem {
      public boolean isMoveTargetFinished() {
         return mTargComplete;
      }
+
+
+    public void setColorWheelUp() {
+        mColorWheelSolenoid.set(DoubleSolenoid.Value.kForward);
+    }
+
+    public void setColorWheelDown() {
+        mColorWheelSolenoid.set(DoubleSolenoid.Value.kReverse);
+    }
 
 }

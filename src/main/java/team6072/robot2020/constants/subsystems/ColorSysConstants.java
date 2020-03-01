@@ -20,4 +20,7 @@ public class ColorSysConstants {
 
     public static final NeutralMode CS_TALON_NEUTRAL_MODE = NeutralMode.Brake;
 
+    public static final int COLOR_DOWN = 0; // intake wheels deployed to get ball
+    public static final int COLOR_UP = 1;
+
 }
