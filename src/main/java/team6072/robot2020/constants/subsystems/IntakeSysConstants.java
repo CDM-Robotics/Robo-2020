@@ -23,11 +23,14 @@ public class IntakeSysConstants {
     public static final int BELT_TALON = 3;
     public static final boolean BELT_TALON_INVERT = false;
     public static final double BELT_TALON_ROTATESPEED = 0.3;
-    public static final NeutralMode IBELT_TALON_NEUTRAL_MODE = NeutralMode.Coast;
+    public static final NeutralMode BELT_TALON_NEUTRAL_MODE = NeutralMode.Coast;
 
     public static final int CAN_TALON = 4;
     public static final boolean CAN_TALON_INVERT = false;
     public static final double CAN_TALON_ROTATESPEED = 0.3;
     public static final NeutralMode CAN_TALON_NEUTRAL_MODE = NeutralMode.Coast;
+
+    public static final int INTAKE_DOWN = 0;        // intake wheels deployed to get ball
+    public static final int INTAKE_UP = 1;
 
 }
